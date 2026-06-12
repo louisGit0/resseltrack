@@ -23,10 +23,10 @@ Requirements pour la mise en ligne fonctionnelle. Chacun est mappé à une phase
 
 ### Sessions
 
-- [ ] **SESS-01**: La session utilisateur **persiste** à travers les invocations serverless (l'utilisateur reste connecté d'une page à l'autre)
-- [ ] **SESS-02**: Les sessions sont stockées en base MySQL via un `SessionHandlerInterface`
-- [ ] **SESS-03**: Le cookie de session porte les flags `Secure` + `HttpOnly` + `SameSite=Lax` en production (`SESSION_SECURE=1`)
-- [ ] **SESS-04**: La protection CSRF reste fonctionnelle sur le nouveau stockage de session (token validé sur les POST)
+- [x] **SESS-01**: La session utilisateur **persiste** à travers les invocations serverless (l'utilisateur reste connecté d'une page à l'autre)
+- [x] **SESS-02**: Les sessions sont stockées en base MySQL via un `SessionHandlerInterface`
+- [x] **SESS-03**: Le cookie de session porte les flags `Secure` + `HttpOnly` + `SameSite=Lax` en production (`SESSION_SECURE=1`)
+- [x] **SESS-04**: La protection CSRF reste fonctionnelle sur le nouveau stockage de session (token validé sur les POST)
 
 ### Stockage des images
 
@@ -94,10 +94,10 @@ Quelles phases couvrent quels requirements.
 | DB-01 | Phase 2 | Complete |
 | DB-02 | Phase 2 | Complete |
 | DB-03 | Phase 2 | Complete |
-| SESS-01 | Phase 3 | Pending |
-| SESS-02 | Phase 3 | Pending |
-| SESS-03 | Phase 3 | Pending |
-| SESS-04 | Phase 3 | Pending |
+| SESS-01 | Phase 3 | Done |
+| SESS-02 | Phase 3 | Done |
+| SESS-03 | Phase 3 | Done |
+| SESS-04 | Phase 3 | Done |
 | STORE-01 | Phase 4 | Pending |
 | STORE-02 | Phase 4 | Pending |
 | STORE-03 | Phase 4 | Pending |

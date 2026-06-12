@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: "Phase 3 Plan 1 complete — DatabaseSessionHandler + sessions DDL + Auth wiring (awaiting operator: bin/migrate.php + SESSION_SECURE + redeploy)"
-last_updated: "2026-06-12T00:00:00.000Z"
-last_activity: 2026-06-12 -- 03-01 complete; DatabaseSessionHandler + sessions DDL + Auth::start() wired; awaiting Wave 2 operator steps
+stopped_at: "Phase 3 complete — persistent MySQL sessions verified live"
+last_updated: "2026-06-12T16:12:00.000Z"
+last_activity: 2026-06-12 -- Phase 3 complete; SESS-01/02/03/04 verified live (login persists, cookie Secure+HttpOnly+SameSite, CSRF OK)
 progress:
   total_phases: 7
-  completed_phases: 2
-  total_plans: 4
-  completed_plans: 4
-  percent: 29
+  completed_phases: 3
+  total_plans: 6
+  completed_plans: 6
+  percent: 43
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-12)
 
 **Core value:** Tout ce qui fonctionne en local fonctionne à l'identique une fois déployé sur Vercel — le site en ligne est pleinement opérationnel pour de vrais utilisateurs.
-**Current focus:** Phase 3 — Persistent Sessions (next)
+**Current focus:** Phase 4 — Image Storage on Cloudflare R2 (next)
 
 ## Current Position
 
-Phase: 3 of 7 IN PROGRESS (Persistent Sessions)
-Plan: 1 of 2 in Phase 3 complete — awaiting operator Wave 2 (03-02)
-Status: 03-01 done — DatabaseSessionHandler lint-clean, sessions DDL in both schema locations, Auth::start() wired; commits unpushed (await Aiven migration before deploy)
-Last activity: 2026-06-12 -- 03-01 complete; all 3 tasks committed (f9e5a45, e6f4b8b, 3585f65)
+Phase: 3 of 7 COMPLETE (Persistent Sessions) → next: Phase 4
+Plan: 2 of 2 in Phase 3 (both complete)
+Status: Phase 3 verified live — MySQL-backed sessions persist across Lambda invocations; cookie Secure+HttpOnly+SameSite=Lax; CSRF intact
+Last activity: 2026-06-12 -- 03-02 complete; SESS-01/02/03/04 PASS live; test data cleaned up
 
-Progress: [███░░░░░░░] 29% (2/7 phases)
+Progress: [████░░░░░░] 43% (3/7 phases)
 
 ## Resolved follow-ups
 - Local Docker TLS regression (02-02): RESOLVED as non-applicable — user confirmed (2026-06-12) Docker local dev is no longer used. is_file TLS guard left as-is; no code change needed.
