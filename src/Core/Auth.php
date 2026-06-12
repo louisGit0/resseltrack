@@ -17,10 +17,15 @@ final class Auth
             return;
         }
 
-        $secure = Env::get('SESSION_SECURE', '0') === '1';
+        // D-02: Register MySQL-backed handler before session_start().
+        $handler = new DatabaseSessionHandler();
+        session_set_save_handler($handler, true); // true = register session_write_close as shutdown fn
+
+        $secure   = Env::get('SESSION_SECURE', '0') === '1';
+        $lifetime = 30 * 86400; // D-05: 30-day persistent cookie
 
         session_set_cookie_params([
-            'lifetime' => 0,
+            'lifetime' => $lifetime,
             'path'     => '/',
             'domain'   => '',
             'secure'   => $secure,
