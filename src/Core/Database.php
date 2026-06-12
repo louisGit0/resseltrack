@@ -30,15 +30,26 @@ final class Database
 
         $dsn = sprintf('mysql:host=%s;port=%s;dbname=%s;charset=utf8mb4', $host, $port, $name);
 
+        // Resolve DB_SSL_CA — relative to project root, absolute path required by PDO.
+        // dirname(__FILE__, 3): src/Core/Database.php -> src/Core -> src -> project root
+        $relCert  = Env::get('DB_SSL_CA', 'certs/aiven-ca.pem');
+        $certPath = str_starts_with($relCert, '/')
+            ? $relCert
+            : dirname(__FILE__, 3) . '/' . $relCert;
+
         $options = [
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES   => false,
         ];
 
+        if (is_file($certPath)) {
+            $options[PDO::MYSQL_ATTR_SSL_CA]                 = $certPath;
+            $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = true;
+        }
+
         try {
             self::$instance = new PDO($dsn, $user, $pass, $options);
-            Schema::ensure(self::$instance);
         } catch (PDOException $e) {
             // Avoid leaking credentials; show a friendly message.
             http_response_code(500);
