@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Phase 1 complete — deployed and verified on Vercel
-last_updated: "2026-06-12T10:05:00.000Z"
-last_activity: 2026-06-12 -- Phase 1 complete (live on Vercel, DEPLOY-01/02/03 verified)
+status: verifying
+stopped_at: "Completed 02-01-PLAN.md — TLS cert-guard + bin/migrate.php + certs/ scaffolding"
+last_updated: "2026-06-12T13:49:42.000Z"
+last_activity: 2026-06-12 -- 02-01 complete; DB-01/02/03 code half done, awaiting operator Wave 2
 progress:
   total_phases: 7
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  total_plans: 4
+  completed_plans: 3
   percent: 14
 ---
 
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-06-12)
 
 ## Current Position
 
-Phase: 1 of 7 COMPLETE (Routing and Front Controller) → next: Phase 2
-Plan: 2 of 2 in Phase 1 (both complete)
-Status: Phase 1 verified live on Vercel
-Last activity: 2026-06-12 -- 01-02 complete; app live at https://resseltrack-nu.vercel.app, DEPLOY-01/02/03 PASS
+Phase: 2 of 7 IN PROGRESS (Database and Schema Migration) → Wave 1 code complete; Wave 2 = operator
+Plan: 1 of 2 in Phase 2 (02-01 complete, 02-02 pending)
+Status: 02-01 complete — DB-01/02/03 code half done; awaiting operator to provision Aiven + run 02-02
+Last activity: 2026-06-12 -- 02-01 complete; TLS cert-guard, bin/migrate.php, certs/ scaffolding committed
 
-Progress: [█░░░░░░░░░] 14% (1/7 phases)
+Progress: [████████░░] 75%
 
 ## Performance Metrics
 
@@ -53,6 +53,7 @@ Progress: [█░░░░░░░░░] 14% (1/7 phases)
 
 *Updated after each plan completion*
 | Phase 01-routing-and-front-controller P01 | 2m | 2 tasks | 4 files |
+| Phase 02-database-and-schema-migration P01 | 2m | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -68,6 +69,9 @@ Recent decisions affecting current work:
 - 01-01: Used vercel.json `rewrites` (source/destination) not legacy `routes` — preserves static file CDN serving for CSS/JS (DEPLOY-02)
 - 01-01: Omitted `memory` field from vercel.json functions block — Fluid Compute enabled by default rejects it on new Vercel projects
 - 01-01: api/index.php is a 3-line require wrapper around public/index.php — D-01 pattern, zero change to existing code (DEPLOY-03)
+- 02-01: SSL options gated on is_file(certPath) so local Docker dev (no cert) connects plaintext; Aiven (cert present) uses TLS with VERIFY_SERVER_CERT=true
+- 02-01: Cert path resolved via dirname(__FILE__,3) — absolute and cwd-independent on both Lambda and operator CLI
+- 02-01: Schema::ensure() removed from Database::connection() (DB-03) — all DDL lives exclusively in bin/migrate.php
 
 ### Pending Todos
 
@@ -94,6 +98,6 @@ Items acknowledged and carried forward from research:
 
 ## Session Continuity
 
-Last session: 2026-06-12T09:55:08.241Z
+Last session: 2026-06-12T13:51:04.242Z
 Stopped at: Phase 1 context gathered
 Resume file: None

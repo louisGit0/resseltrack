@@ -17,9 +17,9 @@ Requirements pour la mise en ligne fonctionnelle. Chacun est mappé à une phase
 
 ### Base de données
 
-- [ ] **DB-01**: L'application se connecte à une base **Aiven MySQL 8** managée en **TLS** (certificat CA) depuis les fonctions Vercel
-- [ ] **DB-02**: Le schéma complet est appliqué via une migration **one-shot** (`bin/migrate.php`), hors du chemin par-requête
-- [ ] **DB-03**: `Database::connection()` n'exécute plus de DDL au runtime (`Schema::ensure()` retiré du chemin par-requête) — aucune race condition au cold start
+- [x] **DB-01**: L'application se connecte à une base **Aiven MySQL 8** managée en **TLS** (certificat CA) depuis les fonctions Vercel
+- [x] **DB-02**: Le schéma complet est appliqué via une migration **one-shot** (`bin/migrate.php`), hors du chemin par-requête
+- [x] **DB-03**: `Database::connection()` n'exécute plus de DDL au runtime (`Schema::ensure()` retiré du chemin par-requête) — aucune race condition au cold start
 
 ### Sessions
 
@@ -91,9 +91,9 @@ Quelles phases couvrent quels requirements.
 | DEPLOY-01 | Phase 1 | Complete |
 | DEPLOY-02 | Phase 1 | Complete |
 | DEPLOY-03 | Phase 1 | Complete |
-| DB-01 | Phase 2 | Pending |
-| DB-02 | Phase 2 | Pending |
-| DB-03 | Phase 2 | Pending |
+| DB-01 | Phase 2 | Complete |
+| DB-02 | Phase 2 | Complete |
+| DB-03 | Phase 2 | Complete |
 | SESS-01 | Phase 3 | Pending |
 | SESS-02 | Phase 3 | Pending |
 | SESS-03 | Phase 3 | Pending |

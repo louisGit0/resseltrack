@@ -61,7 +61,7 @@ Plans:
 Plans:
 **Wave 1**
 
-- [ ] 02-01-PLAN.md — Add cert-guarded TLS options to Database::connection(), remove the per-request Schema::ensure() call, create bin/migrate.php + certs/ scaffolding (autonomous code)
+- [x] 02-01-PLAN.md — Add cert-guarded TLS options to Database::connection(), remove the per-request Schema::ensure() call, create bin/migrate.php + certs/ scaffolding (autonomous code)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -146,7 +146,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Routing and Front Controller | 2/2 | Complete | 2026-06-12 |
-| 2. Database and Schema Migration | 0/2 | Not started | - |
+| 2. Database and Schema Migration | 1/2 | In Progress|  |
 | 3. Persistent Sessions | 0/? | Not started | - |
 | 4. Image Storage on Cloudflare R2 | 0/? | Not started | - |
 | 5. Security Hardening and Production Configuration | 0/? | Not started | - |
