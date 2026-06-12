@@ -14,7 +14,7 @@ ResellTrack runs today in Docker/Apache with local filesystem sessions and image
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Routing and Front Controller** - Wire `vercel.json` so Vercel serves the app and CDN delivers static assets ✅ live on Vercel
-- [ ] **Phase 2: Database and Schema Migration** - Provision Aiven MySQL 8, configure TLS, and apply the schema via a one-shot CLI script
+- [x] **Phase 2: Database and Schema Migration** - Provision Aiven MySQL 8, configure TLS, and apply the schema via a one-shot CLI script ✅ live Aiven MySQL verified
 - [ ] **Phase 3: Persistent Sessions** - Replace ephemeral file sessions with MySQL-backed sessions that survive across Lambda invocations
 - [ ] **Phase 4: Image Storage on Cloudflare R2** - Migrate image upload/delete to R2 via `aws/aws-sdk-php`; enforce the 3.5 MB size guard
 - [ ] **Phase 5: Security Hardening and Production Configuration** - Lock down secrets, emit HSTS, update CSP for R2 domain, add boot safety assertion
@@ -65,7 +65,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 02-02-PLAN.md — Provision Aiven MySQL 8, commit the CA cert, set Vercel env vars, run bin/migrate.php, and verify DB-01/02/03 + local-dev regression on the live URL (operator steps)
+- [x] 02-02-PLAN.md — Provision Aiven MySQL 8, commit the CA cert, set Vercel env vars, run bin/migrate.php, and verify DB-01/02/03 + local-dev regression on the live URL (operator steps)
 
 ### Phase 3: Persistent Sessions
 
@@ -146,7 +146,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Routing and Front Controller | 2/2 | Complete | 2026-06-12 |
-| 2. Database and Schema Migration | 1/2 | In Progress|  |
+| 2. Database and Schema Migration | 2/2 | Complete | 2026-06-12 |
 | 3. Persistent Sessions | 0/? | Not started | - |
 | 4. Image Storage on Cloudflare R2 | 0/? | Not started | - |
 | 5. Security Hardening and Production Configuration | 0/? | Not started | - |

@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: "Completed 02-01-PLAN.md — TLS cert-guard + bin/migrate.php + certs/ scaffolding"
-last_updated: "2026-06-12T13:49:42.000Z"
-last_activity: 2026-06-12 -- 02-01 complete; DB-01/02/03 code half done, awaiting operator Wave 2
+status: executing
+stopped_at: "Phase 2 complete — live Aiven MySQL verified end-to-end"
+last_updated: "2026-06-12T15:10:00.000Z"
+last_activity: 2026-06-12 -- Phase 2 complete; DB-01/02/03 verified live (registration persisted to Aiven over TLS)
 progress:
   total_phases: 7
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 4
-  completed_plans: 3
-  percent: 14
+  completed_plans: 4
+  percent: 29
 ---
 
 # Project State
@@ -21,16 +21,19 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-12)
 
 **Core value:** Tout ce qui fonctionne en local fonctionne à l'identique une fois déployé sur Vercel — le site en ligne est pleinement opérationnel pour de vrais utilisateurs.
-**Current focus:** Phase 2 — Database and Schema Migration (planned, ready to execute)
+**Current focus:** Phase 3 — Persistent Sessions (next)
 
 ## Current Position
 
-Phase: 2 of 7 IN PROGRESS (Database and Schema Migration) → Wave 1 code complete; Wave 2 = operator
-Plan: 1 of 2 in Phase 2 (02-01 complete, 02-02 pending)
-Status: 02-01 complete — DB-01/02/03 code half done; awaiting operator to provision Aiven + run 02-02
-Last activity: 2026-06-12 -- 02-01 complete; TLS cert-guard, bin/migrate.php, certs/ scaffolding committed
+Phase: 2 of 7 COMPLETE (Database and Schema Migration) → next: Phase 3
+Plan: 2 of 2 in Phase 2 (both complete)
+Status: Phase 2 verified live — Aiven MySQL 8.4 reachable over TLS; registration persists to Aiven
+Last activity: 2026-06-12 -- 02-02 complete; DB-01/02/03 verified live; test user cleaned up
 
-Progress: [████████░░] 75%
+Progress: [███░░░░░░░] 29% (2/7 phases)
+
+## Pending operator follow-up
+- Local Docker TLS regression: certs/aiven-ca.pem now committed → is_file guard true in Docker too. If local Docker dev is still used, gate TLS options to the remote Aiven host only. Does NOT affect live site. (See 02-02-SUMMARY "Open Follow-up".)
 
 ## Performance Metrics
 
