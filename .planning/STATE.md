@@ -21,7 +21,7 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-12)
 
 **Core value:** Tout ce qui fonctionne en local fonctionne à l'identique une fois déployé sur Vercel — le site en ligne est pleinement opérationnel pour de vrais utilisateurs.
-**Current focus:** Phase 2 — Database and Schema Migration (next)
+**Current focus:** Phase 2 — Database and Schema Migration (planned, ready to execute)
 
 ## Current Position
 

@@ -47,7 +47,7 @@ Plans:
 
 ### Phase 2: Database and Schema Migration
 
-**Goal**: A live Aiven MySQL 8 instance is reachable from Vercel over TLS, the full schema (including the `sessions` table) is applied once via `bin/migrate.php`, and `Database::connection()` no longer executes DDL on every request
+**Goal**: A live Aiven MySQL 8 instance is reachable from Vercel over TLS, the full schema is applied once via `bin/migrate.php` (the `sessions` table is Phase 3 scope), and `Database::connection()` no longer executes DDL on every request
 **Depends on**: Phase 1
 **Requirements**: DB-01, DB-02, DB-03
 **Success Criteria** (what must be TRUE):
@@ -57,7 +57,15 @@ Plans:
   3. Two simultaneous cold-start requests produce no DDL errors, duplicate-column exceptions, or race conditions in Vercel logs
   4. Product and user CRUD operations persist correctly in the external managed database (not in Docker)
 
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+**Wave 1**
+
+- [ ] 02-01-PLAN.md — Add cert-guarded TLS options to Database::connection(), remove the per-request Schema::ensure() call, create bin/migrate.php + certs/ scaffolding (autonomous code)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] 02-02-PLAN.md — Provision Aiven MySQL 8, commit the CA cert, set Vercel env vars, run bin/migrate.php, and verify DB-01/02/03 + local-dev regression on the live URL (operator steps)
 
 ### Phase 3: Persistent Sessions
 
@@ -138,7 +146,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Routing and Front Controller | 2/2 | Complete | 2026-06-12 |
-| 2. Database and Schema Migration | 0/? | Not started | - |
+| 2. Database and Schema Migration | 0/2 | Not started | - |
 | 3. Persistent Sessions | 0/? | Not started | - |
 | 4. Image Storage on Cloudflare R2 | 0/? | Not started | - |
 | 5. Security Hardening and Production Configuration | 0/? | Not started | - |
