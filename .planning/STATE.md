@@ -32,8 +32,8 @@ Last activity: 2026-06-12 -- 02-02 complete; DB-01/02/03 verified live; test use
 
 Progress: [███░░░░░░░] 29% (2/7 phases)
 
-## Pending operator follow-up
-- Local Docker TLS regression: certs/aiven-ca.pem now committed → is_file guard true in Docker too. If local Docker dev is still used, gate TLS options to the remote Aiven host only. Does NOT affect live site. (See 02-02-SUMMARY "Open Follow-up".)
+## Resolved follow-ups
+- Local Docker TLS regression (02-02): RESOLVED as non-applicable — user confirmed (2026-06-12) Docker local dev is no longer used. is_file TLS guard left as-is; no code change needed.
 
 ## Performance Metrics
 
