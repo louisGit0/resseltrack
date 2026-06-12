@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: "Phase 2 complete — live Aiven MySQL verified end-to-end"
-last_updated: "2026-06-12T15:10:00.000Z"
-last_activity: 2026-06-12 -- Phase 2 complete; DB-01/02/03 verified live (registration persisted to Aiven over TLS)
+stopped_at: "Phase 3 Plan 1 complete — DatabaseSessionHandler + sessions DDL + Auth wiring (awaiting operator: bin/migrate.php + SESSION_SECURE + redeploy)"
+last_updated: "2026-06-12T00:00:00.000Z"
+last_activity: 2026-06-12 -- 03-01 complete; DatabaseSessionHandler + sessions DDL + Auth::start() wired; awaiting Wave 2 operator steps
 progress:
   total_phases: 7
   completed_phases: 2
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-06-12)
 
 ## Current Position
 
-Phase: 2 of 7 COMPLETE (Database and Schema Migration) → next: Phase 3
-Plan: 2 of 2 in Phase 2 (both complete)
-Status: Phase 2 verified live — Aiven MySQL 8.4 reachable over TLS; registration persists to Aiven
-Last activity: 2026-06-12 -- 02-02 complete; DB-01/02/03 verified live; test user cleaned up
+Phase: 3 of 7 IN PROGRESS (Persistent Sessions)
+Plan: 1 of 2 in Phase 3 complete — awaiting operator Wave 2 (03-02)
+Status: 03-01 done — DatabaseSessionHandler lint-clean, sessions DDL in both schema locations, Auth::start() wired; commits unpushed (await Aiven migration before deploy)
+Last activity: 2026-06-12 -- 03-01 complete; all 3 tasks committed (f9e5a45, e6f4b8b, 3585f65)
 
 Progress: [███░░░░░░░] 29% (2/7 phases)
 
@@ -57,6 +57,7 @@ Progress: [███░░░░░░░] 29% (2/7 phases)
 *Updated after each plan completion*
 | Phase 01-routing-and-front-controller P01 | 2m | 2 tasks | 4 files |
 | Phase 02-database-and-schema-migration P01 | 2m | 2 tasks | 5 files |
+| Phase 03-persistent-sessions P01 | 15m | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -75,6 +76,8 @@ Recent decisions affecting current work:
 - 02-01: SSL options gated on is_file(certPath) so local Docker dev (no cert) connects plaintext; Aiven (cert present) uses TLS with VERIFY_SERVER_CERT=true
 - 02-01: Cert path resolved via dirname(__FILE__,3) — absolute and cwd-independent on both Lambda and operator CLI
 - 02-01: Schema::ensure() removed from Database::connection() (DB-03) — all DDL lives exclusively in bin/migrate.php
+- 03-01: DatabaseSessionHandler in App\Core reuses Database::connection() singleton — no new PDO; row-alias UPSERT (MySQL 8.0.19+); lazy expires_at read; session.gc_probability=0
+- 03-01: Auth::start() registers handler before session_start(); cookie lifetime changed from 0 to 30*86400 (30 days); Csrf.php + login/logout untouched
 
 ### Pending Todos
 
@@ -101,6 +104,6 @@ Items acknowledged and carried forward from research:
 
 ## Session Continuity
 
-Last session: 2026-06-12T13:51:04.242Z
-Stopped at: Phase 1 context gathered
+Last session: 2026-06-12T00:00:00.000Z
+Stopped at: Completed 03-01-PLAN.md (DatabaseSessionHandler + sessions DDL + Auth wiring — all 3 tasks committed, unpushed)
 Resume file: None
