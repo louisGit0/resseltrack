@@ -30,9 +30,9 @@ Tout ce qui fonctionne en local doit fonctionner **à l'identique une fois dépl
 <!-- Périmètre de ce jalon : rendre le déploiement Vercel fonctionnel. -->
 
 - [ ] Routing serverless Vercel (`vercel.json` + runtime PHP communautaire) redirigeant vers le front controller
-- [ ] Base MySQL managée externe (ex. TiDB Cloud / Aiven / PlanetScale) + chargement du schéma
+- [ ] Base MySQL 8 managée externe (**Aiven for MySQL**) + connexion TLS (certificat CA committé) + chargement du schéma
 - [ ] Sessions persistantes via stockage en base MySQL (les sessions fichiers ne survivent pas au serverless)
-- [ ] Upload d'images migré vers un stockage objet (Vercel Blob) au lieu du disque local éphémère
+- [ ] Upload d'images migré vers un stockage objet (**Cloudflare R2** via `aws/aws-sdk-php`) au lieu du disque local éphémère
 - [ ] Configuration de production (secrets en variables d'environnement Vercel, `SESSION_SECURE=1`, HSTS, migration du schéma en one-shot hors chemin par-requête)
 - [ ] Vérification end-to-end de chaque fonctionnalité existante une fois déployée en production
 
@@ -71,9 +71,9 @@ Tout ce qui fonctionne en local doit fonctionner **à l'identique une fois dépl
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
 | Déployer sur Vercel malgré un stack PHP/Apache/MySQL peu adapté | Choix explicite de l'utilisateur après présentation des alternatives Docker-natives | — Pending |
-| Conserver MySQL via une base managée externe (pas de Postgres) | Code PDO et SQL spécifiques MySQL ; éviter une réécriture | — Pending |
-| Sessions stockées en base MySQL | Réutilise l'infra DB existante ; évite d'ajouter un service Redis | — Pending |
-| Upload d'images via Vercel Blob | Stockage objet natif Vercel, intégration la plus directe | — Pending |
+| Conserver MySQL via **Aiven for MySQL 8** (pas de Postgres, pas de TiDB) | Code PDO/SQL spécifiques MySQL ; TiDB casse le verrou `FOR UPDATE` des ventes (transactions optimistes) | ✓ Good — confirmé après recherche |
+| Sessions stockées en base MySQL (`SessionHandlerInterface`) | Réutilise l'infra DB existante ; évite d'ajouter un service Redis | ✓ Good — confirmé après recherche |
+| Upload d'images via **Cloudflare R2** (`aws/aws-sdk-php`) | Vercel Blob n'a aucun SDK PHP officiel (API interne fragile) ; R2 est S3-compatible et maintenable | ✓ Good — confirmé après recherche |
 | Nouvelles fonctionnalités reportées à un futur jalon | Priorité : un déploiement fonctionnel d'abord | — Pending |
 
 ## Evolution
