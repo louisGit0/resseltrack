@@ -1,0 +1,64 @@
+# ResellTrack — dev stack. `docker compose up` is enough to get a working app.
+# Values fall back to sane defaults so it boots even without a .env file;
+# copy .env.example to .env to override secrets.
+
+services:
+  app:
+    build: .
+    container_name: reselltrack_app
+    ports:
+      - "${APP_PORT:-8080}:80"
+    volumes:
+      - ./:/var/www/html
+      - ./public/assets/uploads:/var/www/html/public/assets/uploads
+    environment:
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_NAME: "${DB_NAME:-reselltrack}"
+      DB_USER: "${DB_USER:-reselltrack}"
+      DB_PASSWORD: "${DB_PASSWORD:-reselltrack}"
+      APP_ENV: "${APP_ENV:-dev}"
+      SESSION_SECURE: "${SESSION_SECURE:-0}"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.0
+    container_name: reselltrack_db
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-rootsecret}"
+      MYSQL_DATABASE: "${DB_NAME:-reselltrack}"
+      MYSQL_USER: "${DB_USER:-reselltrack}"
+      MYSQL_PASSWORD: "${DB_PASSWORD:-reselltrack}"
+    ports:
+      - "${DB_PORT_EXPOSED:-3306}:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+      # Executed once, in alphabetical order, on first initialisation of the data volume
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./sql/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${DB_ROOT_PASSWORD:-rootsecret}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  # Dev convenience only — do not ship to production.
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: reselltrack_pma
+    ports:
+      - "${PMA_PORT:-8081}:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: "3306"
+      UPLOAD_LIMIT: 64M
+    depends_on:
+      - db
+    restart: unless-stopped
+
+volumes:
+  dbdata:

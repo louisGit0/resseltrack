@@ -1,0 +1,21 @@
+# Secrets
+.env
+
+# Dependencies
+/vendor/
+/node_modules/
+
+# User uploads (keep the folder, ignore its contents)
+/public/assets/uploads/*
+!/public/assets/uploads/.gitkeep
+
+# PHPUnit
+.phpunit.result.cache
+/tests/coverage/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/
