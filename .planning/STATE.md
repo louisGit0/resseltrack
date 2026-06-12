@@ -4,13 +4,13 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 1 context gathered
-last_updated: "2026-06-12T09:35:43.483Z"
+last_updated: "2026-06-12T09:55:08.301Z"
 last_activity: 2026-06-12 -- Phase 1 planning complete
 progress:
   total_phases: 7
   completed_phases: 0
   total_plans: 2
-  completed_plans: 0
+  completed_plans: 1
   percent: 0
 ---
 
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-06-12)
 ## Current Position
 
 Phase: 1 of 7 (Routing and Front Controller)
-Plan: 0 of ? in current phase
-Status: Ready to execute
-Last activity: 2026-06-12 -- Phase 1 planning complete
+Plan: 1 of 2 in current phase (01-01 complete)
+Status: Executing
+Last activity: 2026-06-12 -- 01-01-PLAN.md complete (api/index.php, api/php.ini, vercel.json, .vercelignore created)
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [█████░░░░░] 50%
 
 ## Performance Metrics
 
@@ -52,6 +52,7 @@ Progress: [░░░░░░░░░░] 0%
 - Trend: —
 
 *Updated after each plan completion*
+| Phase 01-routing-and-front-controller P01 | 2m | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -64,6 +65,9 @@ Recent decisions affecting current work:
 - Init: Aiven for MySQL 8.0 confirmed as managed DB (NOT TiDB — breaks `FOR UPDATE` pessimistic locking)
 - Init: MySQL-backed `DatabaseSessionHandler` for sessions (reuses existing DB, no Redis dependency)
 - Init: `Schema::ensure()` moved out of request path to `bin/migrate.php` one-shot CLI
+- 01-01: Used vercel.json `rewrites` (source/destination) not legacy `routes` — preserves static file CDN serving for CSS/JS (DEPLOY-02)
+- 01-01: Omitted `memory` field from vercel.json functions block — Fluid Compute enabled by default rejects it on new Vercel projects
+- 01-01: api/index.php is a 3-line require wrapper around public/index.php — D-01 pattern, zero change to existing code (DEPLOY-03)
 
 ### Pending Todos
 
@@ -90,6 +94,6 @@ Items acknowledged and carried forward from research:
 
 ## Session Continuity
 
-Last session: 2026-06-12T09:00:52.537Z
+Last session: 2026-06-12T09:55:08.241Z
 Stopped at: Phase 1 context gathered
-Resume file: .planning/phases/01-routing-and-front-controller/01-CONTEXT.md
+Resume file: None

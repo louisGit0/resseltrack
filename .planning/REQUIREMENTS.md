@@ -11,9 +11,9 @@ Requirements pour la mise en ligne fonctionnelle. Chacun est mappé à une phase
 
 ### Déploiement & Routing
 
-- [ ] **DEPLOY-01**: L'application répond à toutes ses routes une fois déployée sur Vercel (front controller atteint via `vercel.json`, sans Apache/`.htaccess`)
-- [ ] **DEPLOY-02**: Les assets statiques (CSS, JS) sont servis par le CDN Vercel sans transiter par une fonction PHP
-- [ ] **DEPLOY-03**: Le développement local Docker continue de fonctionner inchangé (`.htaccess` préservé pour le dev)
+- [x] **DEPLOY-01**: L'application répond à toutes ses routes une fois déployée sur Vercel (front controller atteint via `vercel.json`, sans Apache/`.htaccess`)
+- [x] **DEPLOY-02**: Les assets statiques (CSS, JS) sont servis par le CDN Vercel sans transiter par une fonction PHP
+- [x] **DEPLOY-03**: Le développement local Docker continue de fonctionner inchangé (`.htaccess` préservé pour le dev)
 
 ### Base de données
 
@@ -88,9 +88,9 @@ Quelles phases couvrent quels requirements.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DEPLOY-01 | Phase 1 | Pending |
-| DEPLOY-02 | Phase 1 | Pending |
-| DEPLOY-03 | Phase 1 | Pending |
+| DEPLOY-01 | Phase 1 | Complete |
+| DEPLOY-02 | Phase 1 | Complete |
+| DEPLOY-03 | Phase 1 | Complete |
 | DB-01 | Phase 2 | Pending |
 | DB-02 | Phase 2 | Pending |
 | DB-03 | Phase 2 | Pending |

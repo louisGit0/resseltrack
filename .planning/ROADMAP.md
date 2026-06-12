@@ -39,7 +39,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 Plans:
 **Wave 1**
 
-- [ ] 01-01-PLAN.md — Create the four Vercel config files (api/index.php wrapper, api/php.ini, vercel.json rewrites, .vercelignore) without touching existing code
+- [x] 01-01-PLAN.md — Create the four Vercel config files (api/index.php wrapper, api/php.ini, vercel.json rewrites, .vercelignore) without touching existing code
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -137,7 +137,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Routing and Front Controller | 0/2 | Not started | - |
+| 1. Routing and Front Controller | 1/2 | In Progress|  |
 | 2. Database and Schema Migration | 0/? | Not started | - |
 | 3. Persistent Sessions | 0/? | Not started | - |
 | 4. Image Storage on Cloudflare R2 | 0/? | Not started | - |
