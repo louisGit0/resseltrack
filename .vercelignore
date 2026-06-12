@@ -1,0 +1,10 @@
+/vendor
+/.git
+/docker
+/docker-compose.yml
+/Dockerfile
+/.planning
+/tests
+/sql
+.env
+.env.example
