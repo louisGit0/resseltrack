@@ -506,22 +506,21 @@ curl -sI https://<your-deployment>.vercel.app/products | grep location
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
+
+All three open questions are resolved with embedded mitigations that the Phase 1 plans already incorporate. None blocks planning or execution.
 
 1. **`composer install` trigger**
-   - What we know: vercel-community/php README documents build-time composer install; Vercel auto-detects `composer.json`
-   - What's unclear: Whether the auto-detection works for the community PHP runtime when `framework: null` (no framework preset)
-   - Recommendation: If the first deploy shows missing class errors, add `"buildCommand": "composer install --no-dev --optimize-autoloader"` to `vercel.json` and redeploy
+   - What we know: vercel-community/php README documents build-time composer install; Vercel auto-detects `composer.json`. The app's `public/index.php` uses a self-contained `spl_autoload_register` and requires zero third-party runtime packages, so a missing composer install is not fatal.
+   - RESOLVED: `buildCommand` is documented as a contingency only. If the first deploy shows missing class errors, add `"buildCommand": "composer install --no-dev --optimize-autoloader"` to `vercel.json` and redeploy (Plan 01-02 Task 2). Not a blocker.
 
 2. **DB error on first deploy**
-   - What we know: Phase 1 sets no DB env vars; `Database::connection()` will fail on routes that need DB
-   - What's unclear: Whether the DB failure causes a hard 500 exit or whether `/login` (which does need DB for the register form but not the page itself) is reachable
-   - Recommendation: Test `/login` as the Phase 1 smoke test — if it renders the form HTML, routing works (DEPLOY-01 is satisfied)
+   - What we know: Phase 1 sets no DB env vars; `Database::connection()` will fail on routes that need DB. DB env vars arrive in Phase 2.
+   - RESOLVED: Plan 01-02 Task 3 uses `/login` as the DEPLOY-01 smoke route. If it renders the form HTML (the page itself does not require a full DB), routing is proven. DB errors on DB-backed routes are acceptable this phase. Not a blocker.
 
 3. **Vercel Hobby plan `maxDuration`**
-   - What we know: Hobby plan maximum is 60s; default is 10s; `maxDuration: 30` is safe
-   - What's unclear: Whether the community PHP runtime has separate limits
-   - Recommendation: Keep `maxDuration: 30`; adjust if Vercel rejects the config during deploy
+   - What we know: Hobby plan maximum is 60s; default is 10s; `maxDuration: 30` is safe.
+   - RESOLVED: Keep `maxDuration: 30` in `vercel.json` (Plan 01-01 Task 2); if Vercel rejects the config during deploy, remove or lower it (Plan 01-02 Task 2 contingency). Not a blocker.
 
 ---
 

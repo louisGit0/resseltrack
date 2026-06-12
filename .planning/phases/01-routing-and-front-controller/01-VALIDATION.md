@@ -3,7 +3,7 @@ phase: 1
 slug: routing-and-front-controller
 status: draft
 nyquist_compliant: true
-wave_0_complete: false
+wave_0_complete: true
 created: 2026-06-12
 ---
 
