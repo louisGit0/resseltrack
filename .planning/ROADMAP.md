@@ -13,7 +13,7 @@ ResellTrack runs today in Docker/Apache with local filesystem sessions and image
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Routing and Front Controller** - Wire `vercel.json` so Vercel serves the app and CDN delivers static assets
+- [x] **Phase 1: Routing and Front Controller** - Wire `vercel.json` so Vercel serves the app and CDN delivers static assets ✅ live on Vercel
 - [ ] **Phase 2: Database and Schema Migration** - Provision Aiven MySQL 8, configure TLS, and apply the schema via a one-shot CLI script
 - [ ] **Phase 3: Persistent Sessions** - Replace ephemeral file sessions with MySQL-backed sessions that survive across Lambda invocations
 - [ ] **Phase 4: Image Storage on Cloudflare R2** - Migrate image upload/delete to R2 via `aws/aws-sdk-php`; enforce the 3.5 MB size guard
@@ -137,7 +137,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Routing and Front Controller | 1/2 | In Progress|  |
+| 1. Routing and Front Controller | 2/2 | Complete | 2026-06-12 |
 | 2. Database and Schema Migration | 0/? | Not started | - |
 | 3. Persistent Sessions | 0/? | Not started | - |
 | 4. Image Storage on Cloudflare R2 | 0/? | Not started | - |
