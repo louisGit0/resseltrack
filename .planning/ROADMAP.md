@@ -79,7 +79,15 @@ Plans:
   3. Submitting a POST form (e.g. creating a product) does not produce a CSRF 419 error
   4. Logging out invalidates the session — navigating to a protected route immediately redirects to `/login`
 
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+**Wave 1**
+
+- [ ] 03-01-PLAN.md — Create DatabaseSessionHandler (\SessionHandlerInterface), wire it into Auth::start() with a 30-day cookie, add the sessions table to sql/schema.sql + Schema::ensure(), and set session.gc_probability=0 in api/php.ini (autonomous code)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] 03-02-PLAN.md — Re-run bin/migrate.php against Aiven to create the sessions table, set SESSION_SECURE=1 in Vercel, redeploy, and verify SESS-01/02/03/04 on the live URL (operator steps)
 
 ### Phase 4: Image Storage on Cloudflare R2
 
@@ -147,7 +155,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 |-------|----------------|--------|-----------|
 | 1. Routing and Front Controller | 2/2 | Complete | 2026-06-12 |
 | 2. Database and Schema Migration | 2/2 | Complete | 2026-06-12 |
-| 3. Persistent Sessions | 0/? | Not started | - |
+| 3. Persistent Sessions | 0/2 | Planned | - |
 | 4. Image Storage on Cloudflare R2 | 0/? | Not started | - |
 | 5. Security Hardening and Production Configuration | 0/? | Not started | - |
 | 6. Performance and Reliability | 0/? | Not started | - |
