@@ -186,7 +186,29 @@ Plans:
 
 **New files**: `src/Models/Supplier.php`, `src/Controllers/SupplierController.php`, `src/Views/suppliers/index.php`, `src/Views/suppliers/form.php`
 **Modified files**: `sql/schema.sql` (suppliers table + orders.supplier_id column), `src/Controllers/OrderController.php` (pass suppliers list to form; accept supplier_id POST), `src/Views/orders/form.php` (supplier dropdown), `src/Controllers/ProductController.php` (destroy() adds Cloudinary purge), `src/Views/layout.php` (nav entry), `public/index.php` (route registration for suppliers CRUD)
-**Plans**: TBD
+**Plans**: 6 plans
+Plans:
+**Wave 1**
+
+- [ ] 08-01-PLAN.md — Schema foundation: add suppliers table (sql/schema.sql + Schema::ensure()) and guarded orders.supplier_id nullable FK (ON DELETE SET NULL)
+- [ ] 08-02-PLAN.md — OPS-06: ProductController::destroy() purges cover + gallery from Cloudinary best-effort (deduped, logged, never blocks)
+
+**Wave 2** *(blocked on Wave 1)*
+
+- [ ] 08-03-PLAN.md — SUP-01 backend: Supplier model (per-user CRUD + linked-orders count), SupplierController, routes, Fournisseurs nav entry
+
+**Wave 3** *(blocked on Wave 2)*
+
+- [ ] 08-04-PLAN.md — SUP-01 UI: suppliers index table + create/edit form + reusable clickable star-rating widget (app.js/style.css)
+
+**Wave 4** *(blocked on Wave 3)*
+
+- [ ] 08-05-PLAN.md — SUP-02: order↔supplier dropdown + "Autre" fallback, owned-id resolution + id/name dual-write (D-02), Order model supplier_id, syncSupplier() toggle
+
+**Wave 5** *(blocked on Waves 1-4)*
+
+- [ ] 08-06-PLAN.md — Operator: run bin/migrate.php against Aiven + verify SUP-01/SUP-02/OPS-06 on the live Vercel URL (checkpoints)
+
 **UI hint**: yes
 
 ### Phase 9: Product Ratings
@@ -237,6 +259,6 @@ v1.0 phases (1-7) complete. v2.0 executes in numeric order: 8 → 9 → 10
 | 5. Security Hardening and Production Configuration | 1/1 | Complete | 2026-06-15 |
 | 6. Performance and Reliability | 1/1 | Complete   | 2026-06-15 |
 | 7. Production Verification | 1/1 | Complete | 2026-06-15 |
-| 8. Suppliers and Product Cleanup | 0/TBD | Not started | - |
+| 8. Suppliers and Product Cleanup | 0/6 | Not started | - |
 | 9. Product Ratings | 0/TBD | Not started | - |
 | 10. Product URL Auto-fill | 0/TBD | Not started | - |
