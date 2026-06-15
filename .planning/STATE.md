@@ -2,11 +2,12 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Suppliers, ratings & auto-fill
-status: planning
-last_updated: "2026-06-15T17:34:27.660Z"
-last_activity: 2026-06-15
+status: Defining requirements
+stopped_at: Phase 8 context gathered
+last_updated: "2026-06-15T18:22:25.178Z"
+last_activity: 2026-06-15 — Milestone v2.0 started
 progress:
-  total_phases: 0
+  total_phases: 3
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -137,6 +138,6 @@ Items acknowledged and carried forward from research:
 
 ## Session Continuity
 
-Last session: 2026-06-15T12:34:44.991Z
-Stopped at: Completed 05-01-PLAN.md (isHttps detection + boot safety gate + HSTS + SEC-01/03 audit — Task 1 committed 772fa54, Task 2 audit-only, unpushed)
-Resume file: None
+Last session: 2026-06-15T18:22:25.171Z
+Stopped at: Phase 8 context gathered
+Resume file: .planning/phases/08-suppliers-and-product-cleanup/08-CONTEXT.md
