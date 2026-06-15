@@ -289,16 +289,26 @@ final class SaleController extends Controller
     private function productsMeta(): array
     {
         $userId = Auth::id();
+
+        // Group all lots by product in PHP — one query for ALL lots.
+        $lotsByProduct = [];
+        foreach ($this->purchases->lotsForUser($userId) as $lot) {
+            $lotsByProduct[$lot['product_id']][] = [
+                'cost_eur' => $lot['cost_eur'],
+                'quantity' => $lot['quantity'],
+            ];
+        }
+
+        // One query for all sold quantities.
+        $soldByProduct = $this->sales->soldQtyByProduct($userId);
+
         $out = [];
         foreach ($this->products->allForUser($userId) as $p) {
             $pid = (int) $p['id'];
-            $cump = ProfitCalculator::cump($this->purchases->lotsForProduct($userId, $pid));
-            $stock = ProfitCalculator::stock(
-                $this->purchases->purchasedQty($userId, $pid),
-                $this->sales->soldQty($userId, $pid)
-            );
-            $p['cump'] = $cump;
-            $p['stock'] = $stock;
+            $lots = $lotsByProduct[$pid] ?? [];
+            $purchasedQty = (int) array_sum(array_column($lots, 'quantity'));
+            $p['cump']  = ProfitCalculator::cump($lots);
+            $p['stock'] = ProfitCalculator::stock($purchasedQty, $soldByProduct[$pid] ?? 0);
             $out[] = $p;
         }
         return $out;

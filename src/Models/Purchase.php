@@ -230,6 +230,29 @@ final class Purchase
     }
 
     /**
+     * All lots for all of a user's products, shaped for ProfitCalculator::cump().
+     * Add product_id to the projection so the caller can group by it in PHP.
+     * @return array<int, array{product_id: int, cost_eur: float, quantity: int}>
+     */
+    public function lotsForUser(int $userId): array
+    {
+        $stmt = $this->db->prepare(
+            'SELECT product_id, (unit_cost_eur * quantity) AS cost_eur, quantity
+             FROM purchases WHERE user_id = :uid'
+        );
+        $stmt->execute(['uid' => $userId]);
+        $lots = [];
+        foreach ($stmt->fetchAll() as $row) {
+            $lots[] = [
+                'product_id' => (int) $row['product_id'],
+                'cost_eur'   => (float) $row['cost_eur'],
+                'quantity'   => (int) $row['quantity'],
+            ];
+        }
+        return $lots;
+    }
+
+    /**
      * Total purchased units for a product. With $forUpdate=true (inside a
      * transaction) the underlying rows are locked to serialize concurrent
      * stock checks.

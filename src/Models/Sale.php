@@ -350,6 +350,24 @@ final class Sale
         return (int) $stmt->fetchColumn();
     }
 
+    /**
+     * Units sold per product for a user. Returns a map [product_id => soldQty].
+     * @return array<int, int>
+     */
+    public function soldQtyByProduct(int $userId): array
+    {
+        $stmt = $this->db->prepare(
+            'SELECT product_id, COALESCE(SUM(quantity), 0) AS qty
+             FROM sales WHERE user_id = :uid GROUP BY product_id'
+        );
+        $stmt->execute(['uid' => $userId]);
+        $map = [];
+        foreach ($stmt->fetchAll() as $row) {
+            $map[(int) $row['product_id']] = (int) $row['qty'];
+        }
+        return $map;
+    }
+
     private function bindings(int $userId, array $data): array
     {
         return [
