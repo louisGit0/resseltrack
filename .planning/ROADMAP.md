@@ -22,7 +22,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 5: Security Hardening and Production Configuration** - Lock down secrets, emit HSTS, update CSP for image domain, add boot safety assertion ✅ SEC-01..04 verified live
 - [x] **Phase 6: Performance and Reliability** - Fix the N+1 in `SaleController::productsMeta()` and harden `ExchangeRateService` with timeout and visible error (completed 2026-06-15)
 - [x] **Phase 7: Production Verification** - End-to-end verification of every existing feature on the live Vercel URL ✅ VERIF-01 PASS (milestone v1.0 complete)
-- [ ] **Phase 8: Suppliers and Product Cleanup** - CRUD fournisseurs, lien optionnel sur les commandes, purge Cloudinary à la suppression produit ⚠ nécessite re-run `bin/migrate.php`
+- [x] **Phase 8: Suppliers and Product Cleanup** - CRUD fournisseurs, lien optionnel sur les commandes, purge Cloudinary à la suppression produit ⚠ nécessite re-run `bin/migrate.php` (completed 2026-06-15)
 - [ ] **Phase 9: Product Ratings** - Note 1-5 + commentaire par produit, éditable après réception, affichée en liste et fiche ⚠ nécessite re-run `bin/migrate.php`
 - [ ] **Phase 10: Product URL Auto-fill** - Scrape best-effort d'une URL produit publique (AliExpress) pour pré-remplir titre/prix/image, repli manuel
 
@@ -207,7 +207,7 @@ Plans:
 
 **Wave 5** *(blocked on Waves 1-4)*
 
-- [ ] 08-06-PLAN.md — Operator: run bin/migrate.php against Aiven + verify SUP-01/SUP-02/OPS-06 on the live Vercel URL (checkpoints)
+- [x] 08-06-PLAN.md — Operator: run bin/migrate.php against Aiven + verify SUP-01/SUP-02/OPS-06 on the live Vercel URL (checkpoints)
 
 **UI hint**: yes
 
@@ -259,6 +259,6 @@ v1.0 phases (1-7) complete. v2.0 executes in numeric order: 8 → 9 → 10
 | 5. Security Hardening and Production Configuration | 1/1 | Complete | 2026-06-15 |
 | 6. Performance and Reliability | 1/1 | Complete   | 2026-06-15 |
 | 7. Production Verification | 1/1 | Complete | 2026-06-15 |
-| 8. Suppliers and Product Cleanup | 5/6 | In Progress|  |
+| 8. Suppliers and Product Cleanup | 6/6 | Complete   | 2026-06-15 |
 | 9. Product Ratings | 0/TBD | Not started | - |
 | 10. Product URL Auto-fill | 0/TBD | Not started | - |
