@@ -22,21 +22,41 @@ final class ExchangeRateService
     public function latest(string $from, string $to = 'EUR'): ?float
     {
         $from = strtoupper($from);
-        $to = strtoupper($to);
+        $to   = strtoupper($to);
         if ($from === $to) {
             return 1.0;
         }
 
         $url = self::ENDPOINT . '?from=' . urlencode($from) . '&to=' . urlencode($to);
+        $ch  = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT        => 5,
+            CURLOPT_CONNECTTIMEOUT => 5,
+        ]);
+        $body = curl_exec($ch);
 
-        $ctx = stream_context_create(['http' => ['timeout' => 5, 'method' => 'GET']]);
-        $raw = @file_get_contents($url, false, $ctx);
-        if ($raw === false) {
+        if ($body === false) {
+            error_log('ExchangeRateService: curl error for ' . $from . '->' . $to . ': ' . curl_error($ch));
+            curl_close($ch);
             return null;
         }
 
-        $data = json_decode($raw, true);
+        $status = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
+        curl_close($ch);
+
+        if ($status !== 200) {
+            error_log('ExchangeRateService: HTTP ' . $status . ' for ' . $from . '->' . $to);
+            return null;
+        }
+        if ($body === '') {
+            error_log('ExchangeRateService: empty response for ' . $from . '->' . $to);
+            return null;
+        }
+
+        $data = json_decode($body, true);
         if (!is_array($data) || !isset($data['rates'][$to])) {
+            error_log('ExchangeRateService: unexpected JSON for ' . $from . '->' . $to . ': ' . substr((string) $body, 0, 200));
             return null;
         }
 
