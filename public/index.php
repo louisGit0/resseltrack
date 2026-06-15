@@ -72,7 +72,7 @@ header(
     . "script-src 'self' cdn.jsdelivr.net; "
     . "style-src 'self' 'unsafe-inline' cdn.jsdelivr.net fonts.googleapis.com; "
     . "font-src fonts.gstatic.com cdn.jsdelivr.net; "
-    . "img-src 'self' data: https://*.r2.dev; " // pre-satisfies Phase 5 SEC-03 for STORE-02
+    . "img-src 'self' data: https://res.cloudinary.com; " // Cloudinary image delivery (STORE-02); pre-satisfies part of Phase 5 SEC-03
     . "connect-src 'self' api.frankfurter.app"
 );
 

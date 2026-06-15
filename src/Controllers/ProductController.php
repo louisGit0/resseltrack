@@ -11,7 +11,7 @@ use App\Models\ProductImage;
 use App\Models\Purchase;
 use App\Models\Sale;
 use App\Services\ProfitCalculator;
-use App\Services\R2Storage;
+use App\Services\CloudinaryStorage;
 
 final class ProductController extends Controller
 {
@@ -374,9 +374,9 @@ final class ProductController extends Controller
         $imageModel->delete((int) $image['id'], $userId);
 
         try {
-            (new R2Storage())->delete((string) $image['path']);
+            (new CloudinaryStorage())->delete((string) $image['path']);
         } catch (\Throwable $e) {
-            error_log('R2 delete failed for path ' . $image['path'] . ': ' . $e->getMessage());
+            error_log('Cloudinary delete failed for path ' . $image['path'] . ': ' . $e->getMessage());
             // best-effort: continue, the DB row is already gone
         }
 
@@ -466,8 +466,8 @@ final class ProductController extends Controller
     }
 
     /**
-     * Validate (size + real MIME) and store one uploaded file on Cloudflare R2.
-     * @return array{0: ?string, 1: ?string} [full R2 URL, error message]
+     * Validate (size + real MIME) and store one uploaded file on Cloudinary.
+     * @return array{0: ?string, 1: ?string} [public Cloudinary URL, error message]
      */
     private function storeUploadedFile(string $tmp, int $size): array
     {
@@ -482,11 +482,12 @@ final class ProductController extends Controller
         if (!isset($allowed[$mime])) {
             return [null, 'format non supporté (JPEG, PNG, WebP ou GIF attendu).'];
         }
-        $key = bin2hex(random_bytes(8)) . '.' . $allowed[$mime];
+        // Cloudinary derives the format from the file; public_id carries no extension.
+        $publicId = bin2hex(random_bytes(8));
         try {
-            $url = (new R2Storage())->put($tmp, $key, (string) $mime);
+            $url = (new CloudinaryStorage())->upload($tmp, $publicId);
         } catch (\Throwable $e) {
-            error_log('R2 put failed: ' . $e->getMessage());
+            error_log('Cloudinary upload failed: ' . $e->getMessage());
             return [null, 'échec de l\'enregistrement du fichier.'];
         }
         return [$url, null];
