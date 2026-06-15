@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: "Phase 4 complete — image storage live on Cloudinary, STORE-01..05 verified"
-last_updated: "2026-06-15T09:10:00.000Z"
-last_activity: 2026-06-15 -- Phase 4 complete; pivoted R2→Cloudinary; STORE-01..05 verified live; test data cleaned
+stopped_at: "Phase 5 plan 01 complete — boot gate + HSTS + SEC-01/03 audit; ready for Vercel redeploy"
+last_updated: "2026-06-15T09:51:15Z"
+last_activity: 2026-06-15 -- Phase 5 plan 01 complete; SEC-01..04 satisfied locally; awaiting orchestrator redeploy + live smoke checks
 progress:
   total_phases: 7
   completed_phases: 4
-  total_plans: 8
-  completed_plans: 8
-  percent: 57
+  total_plans: 9
+  completed_plans: 9
+  percent: 64
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-06-12)
 
 ## Current Position
 
-Phase: 4 of 7 COMPLETE (Image Storage on Cloudinary) → next: Phase 5
-Plan: 2 of 2 in Phase 4 (both complete)
-Status: Image storage live on Cloudinary (pivoted from R2). STORE-01..05 verified live (upload→res.cloudinary.com, display 200, delete→404 via invalidate, >3.5MB FR message). Test data cleaned; prod DB pristine.
+Phase: 5 of 7 IN PROGRESS (Security Hardening and Production Configuration)
+Plan: 1 of 1 in Phase 5 (complete — awaiting live redeploy verification)
+Status: Phase 5 plan 01 complete. Boot gate + HSTS + SEC-01/03 audit all pass locally. Commit 772fa54 unpushed. Orchestrator runs live smoke checks (HSTS curl, /login 200, gate negative test) post-deploy.
 Last activity: 2026-06-15
 
-Progress: [██████░░░░] 57% (4/7 phases)
+Progress: [███████░░░] 64% (9/9 plans complete; Phase 5 code done)
 
 ## Resolved (this session)
 - Aiven DB power-off (free-tier inactivity): RESOLVED — operator powered it back on. Keep-alive (.github/workflows/keepalive.yml pings /health every 10 min) prevents recurrence.
@@ -93,6 +93,10 @@ Recent decisions affecting current work:
 - 04-01: CSP img-src updated in plan 04-01 (not deferred to Phase 5) — STORE-02 images display is false while r2.dev blocked; pre-satisfies Phase 5 SEC-03
 - 04-01: Full r2.dev URL stored in DB (D-05); views render img src unchanged; key derived by stripping base URL at delete time
 - 04-01: PHP class constants cannot use cast expressions; MAX_UPLOAD_BYTES = 3670016 (literal, =(int)(3.5*1024*1024)) with comment documentation
+- 05-01: HTTPS detection via HTTP_X_FORWARDED_PROTO (Vercel edge) not APP_ENV — zero operator step (D-01); $_SERVER['HTTPS'] as fallback
+- 05-01: Boot gate placed after /health early-return and before Auth::start() — keep-alive always responds (D-04)
+- 05-01: App-level HSTS max-age=31536000; includeSubDomains, no preload-list submission — Vercel platform already emits 2-year HSTS; app header is defense-in-depth (D-02)
+- 05-01: Boot gate error page is generic French HTML; specific reason goes to error_log only — no config state leaked to HTTP (RESEARCH Pitfall 4)
 
 ### Pending Todos
 
@@ -119,6 +123,6 @@ Items acknowledged and carried forward from research:
 
 ## Session Continuity
 
-Last session: 2026-06-15T07:06:04.691Z
-Stopped at: Completed 04-01-PLAN.md (aws/aws-sdk-php + R2Storage service + ProductController disk→R2 swap — all 3 tasks committed, unpushed)
+Last session: 2026-06-15T09:51:15Z
+Stopped at: Completed 05-01-PLAN.md (isHttps detection + boot safety gate + HSTS + SEC-01/03 audit — Task 1 committed 772fa54, Task 2 audit-only, unpushed)
 Resume file: None

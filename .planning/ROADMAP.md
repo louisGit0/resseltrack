@@ -129,7 +129,7 @@ Plans:
 Plans:
 **Wave 1**
 
-- [ ] 05-01-PLAN.md — Add HTTPS detection + production boot safety gate (SEC-04) + HSTS header (SEC-02) to public/index.php; verify SEC-01 (no committed secret) and SEC-03 (CSP covers Cloudinary). Single autonomous plan — no operator/Wave-2 step (HTTPS detection avoids needing APP_ENV).
+- [x] 05-01-PLAN.md — Add HTTPS detection + production boot safety gate (SEC-04) + HSTS header (SEC-02) to public/index.php; verify SEC-01 (no committed secret) and SEC-03 (CSP covers Cloudinary). Single autonomous plan — no operator/Wave-2 step (HTTPS detection avoids needing APP_ENV).
 
 ### Phase 6: Performance and Reliability
 
@@ -170,6 +170,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 2. Database and Schema Migration | 2/2 | Complete | 2026-06-12 |
 | 3. Persistent Sessions | 2/2 | Complete | 2026-06-12 |
 | 4. Image Storage (Cloudinary) | 2/2 | Complete | 2026-06-15 |
-| 5. Security Hardening and Production Configuration | 0/? | Not started | - |
+| 5. Security Hardening and Production Configuration | 1/1 | Complete (awaiting live deploy verification) | 2026-06-15 |
 | 6. Performance and Reliability | 0/? | Not started | - |
 | 7. Production Verification | 0/? | Not started | - |

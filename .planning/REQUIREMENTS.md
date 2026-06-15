@@ -38,10 +38,10 @@ Requirements pour la mise en ligne fonctionnelle. Chacun est mappé à une phase
 
 ### Sécurité & Configuration production
 
-- [ ] **SEC-01**: Tous les secrets sont fournis via les variables d'environnement Vercel (aucun secret committé ; `.env` gitignoré)
-- [ ] **SEC-02**: L'en-tête `Strict-Transport-Security` (HSTS) est émis en production
-- [ ] **SEC-03**: La CSP autorise le domaine public R2 pour les images (`img-src`)
-- [ ] **SEC-04**: L'application refuse de démarrer en production avec une configuration dangereuse (ex. `SESSION_SECURE=0` ou credentials par défaut)
+- [x] **SEC-01**: Tous les secrets sont fournis via les variables d'environnement Vercel (aucun secret committé ; `.env` gitignoré)
+- [x] **SEC-02**: L'en-tête `Strict-Transport-Security` (HSTS) est émis en production
+- [x] **SEC-03**: La CSP autorise le domaine public R2 pour les images (`img-src`)
+- [x] **SEC-04**: L'application refuse de démarrer en production avec une configuration dangereuse (ex. `SESSION_SECURE=0` ou credentials par défaut)
 
 ### Fiabilité (bloquant pour « fonctionnel »)
 
@@ -103,10 +103,10 @@ Quelles phases couvrent quels requirements.
 | STORE-03 | Phase 4 | Complete |
 | STORE-04 | Phase 4 | Complete |
 | STORE-05 | Phase 4 | Complete |
-| SEC-01 | Phase 5 | Pending |
-| SEC-02 | Phase 5 | Pending |
-| SEC-03 | Phase 5 | Pending |
-| SEC-04 | Phase 5 | Pending |
+| SEC-01 | Phase 5 | Complete |
+| SEC-02 | Phase 5 | Complete |
+| SEC-03 | Phase 5 | Complete |
+| SEC-04 | Phase 5 | Complete |
 | PERF-01 | Phase 6 | Pending |
 | PERF-02 | Phase 6 | Pending |
 | VERIF-01 | Phase 7 | Pending |
@@ -118,4 +118,4 @@ Quelles phases couvrent quels requirements.
 
 ---
 *Requirements defined: 2026-06-12*
-*Last updated: 2026-06-12 — traceability filled after roadmap creation*
+*Last updated: 2026-06-15 — SEC-01..04 marked complete after Phase 5 plan 01 execution*
