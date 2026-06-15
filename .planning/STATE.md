@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: "Phase 4 Wave 1 deployed (R2 code + composer.lock fix + /health keep-alive); BLOCKED on operator powering Aiven back on"
-last_updated: "2026-06-15T07:25:00.000Z"
-last_activity: 2026-06-15 -- Phase 4 04-01 code live; Aiven free-tier powered off (DNS unresolved) — awaiting operator Power on; keep-alive added to prevent recurrence
+stopped_at: "Phase 4 complete — image storage live on Cloudinary, STORE-01..05 verified"
+last_updated: "2026-06-15T09:10:00.000Z"
+last_activity: 2026-06-15 -- Phase 4 complete; pivoted R2→Cloudinary; STORE-01..05 verified live; test data cleaned
 progress:
   total_phases: 7
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 8
-  completed_plans: 7
-  percent: 43
+  completed_plans: 8
+  percent: 57
 ---
 
 # Project State
@@ -21,23 +21,25 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-12)
 
 **Core value:** Tout ce qui fonctionne en local fonctionne à l'identique une fois déployé sur Vercel — le site en ligne est pleinement opérationnel pour de vrais utilisateurs.
-**Current focus:** Phase 4 — Image Storage (pivoted R2 → Cloudinary; code deployed; pending operator Cloudinary account + 3 env vars)
+**Current focus:** Phase 5 — Security Hardening & Production Configuration (next)
 
 ## Current Position
 
-Phase: 4 of 7 IN PROGRESS (Image Storage → Cloudinary) → code live; pending Cloudinary creds + live STORE-01..05 verify
-Plan: 1 of 2 in Phase 4 (code deployed; operator setup + verify pending)
-Status: Image storage pivoted R2 → Cloudinary (R2/Supabase needed card or hit free quota). CloudinaryStorage (signed REST via curl, no SDK) deployed at 8adb47b, build green; /health 200, site healthy. PENDING: operator creates free Cloudinary account (no card) + sets CLOUDINARY_CLOUD_NAME/API_KEY/API_SECRET in Vercel; then I verify STORE-01..05 live.
+Phase: 4 of 7 COMPLETE (Image Storage on Cloudinary) → next: Phase 5
+Plan: 2 of 2 in Phase 4 (both complete)
+Status: Image storage live on Cloudinary (pivoted from R2). STORE-01..05 verified live (upload→res.cloudinary.com, display 200, delete→404 via invalidate, >3.5MB FR message). Test data cleaned; prod DB pristine.
 Last activity: 2026-06-15
 
-Progress: [████░░░░░░] 43% (3/7 phases)
-
-## Active blocker
-- Phase 4 image upload needs Cloudinary credentials: operator must create a free Cloudinary account (no card) and set CLOUDINARY_CLOUD_NAME / CLOUDINARY_API_KEY / CLOUDINARY_API_SECRET in Vercel (Production). Until then, normal pages work; only image upload fails (generic FR error). See 04-CONTEXT AMENDMENT 2026-06-15.
+Progress: [██████░░░░] 57% (4/7 phases)
 
 ## Resolved (this session)
-- Aiven DB power-off (free-tier inactivity): RESOLVED — operator powered it back on (DB up, /health 200). Keep-alive (.github/workflows/keepalive.yml pings /health every 10 min) now prevents recurrence.
-- composer.lock was missing → first composer-install build failed; generated + committed (now dev-only after dropping aws-sdk-php).
+- Aiven DB power-off (free-tier inactivity): RESOLVED — operator powered it back on. Keep-alive (.github/workflows/keepalive.yml pings /health every 10 min) prevents recurrence.
+- composer.lock was missing → build failed; fixed (now dev-only after dropping aws-sdk-php).
+- Provider pivot R2→Supabase→Cloudinary (card/quota constraints) — landed on Cloudinary (free, no card).
+
+## Open follow-up (out of scope, tracked)
+- ProductController::destroy() does not purge a deleted product's Cloudinary cover/gallery objects (orphans). deleteImage() already does. Spawned as a separate task.
+- Phase 5 SEC-03 (CSP for image domain) is partly pre-satisfied: img-src already allows res.cloudinary.com.
 
 ## Resolved follow-ups
 
