@@ -190,7 +190,7 @@ Plans:
 Plans:
 **Wave 1**
 
-- [ ] 08-01-PLAN.md — Schema foundation: add suppliers table (sql/schema.sql + Schema::ensure()) and guarded orders.supplier_id nullable FK (ON DELETE SET NULL)
+- [x] 08-01-PLAN.md — Schema foundation: add suppliers table (sql/schema.sql + Schema::ensure()) and guarded orders.supplier_id nullable FK (ON DELETE SET NULL)
 - [ ] 08-02-PLAN.md — OPS-06: ProductController::destroy() purges cover + gallery from Cloudinary best-effort (deduped, logged, never blocks)
 
 **Wave 2** *(blocked on Wave 1)*
@@ -259,6 +259,6 @@ v1.0 phases (1-7) complete. v2.0 executes in numeric order: 8 → 9 → 10
 | 5. Security Hardening and Production Configuration | 1/1 | Complete | 2026-06-15 |
 | 6. Performance and Reliability | 1/1 | Complete   | 2026-06-15 |
 | 7. Production Verification | 1/1 | Complete | 2026-06-15 |
-| 8. Suppliers and Product Cleanup | 0/6 | Not started | - |
+| 8. Suppliers and Product Cleanup | 1/6 | In Progress|  |
 | 9. Product Ratings | 0/TBD | Not started | - |
 | 10. Product URL Auto-fill | 0/TBD | Not started | - |

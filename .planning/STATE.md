@@ -4,14 +4,14 @@ milestone: v2.0
 milestone_name: Suppliers, ratings & auto-fill
 status: executing
 stopped_at: Phase 8 context gathered
-last_updated: "2026-06-15T18:52:08.260Z"
-last_activity: 2026-06-15 -- Phase 8 planning complete
+last_updated: "2026-06-15T19:19:23.403Z"
+last_activity: 2026-06-15
 progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 6
-  completed_plans: 0
-  percent: 0
+  completed_plans: 1
+  percent: 17
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-12)
 
 **Core value:** Tout ce qui fonctionne en local fonctionne à l'identique une fois déployé sur Vercel — le site en ligne est pleinement opérationnel pour de vrais utilisateurs.
-**Current focus:** ✅ Milestone v1.0 COMPLETE — ResellTrack fully operational on Vercel for real users.
+**Current focus:** Phase 08 — suppliers-and-product-cleanup
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
+Phase: 08 (suppliers-and-product-cleanup) — EXECUTING
+Plan: 2 of 6
 Status: Ready to execute
-Last activity: 2026-06-15 -- Phase 8 planning complete
+Last activity: 2026-06-15
 
 ## Possible next steps (post-v1.0, optional)
 
@@ -80,6 +80,7 @@ Last activity: 2026-06-15 -- Phase 8 planning complete
 | Phase 03-persistent-sessions P01 | 15m | 3 tasks | 5 files |
 | Phase 04-image-storage-r2 P01 | 6 | 3 tasks | 6 files |
 | Phase 06-performance-and-reliability P01 | 15m | 3 tasks | 6 files |
+| Phase 08-suppliers-and-product-cleanup P01 | 3m | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -112,6 +113,7 @@ Recent decisions affecting current work:
 - 06-01: ExchangeRateService rewritten to curl (5s timeout, !==200, null on all failure paths, error_log each)
 - 06-01: PurchaseController validate() server-side FX fallback + block before unitCostEur on null (no silent 0.00); covers store()+update()
 - 06-01 (fix): FX API endpoint api.frankfurter.app → api.frankfurter.dev/v1 (the .app domain was retired → 301); fixed in ExchangeRateService, app.js (x2), CSP connect-src
+- [Phase 08]: 08-01: orders.supplier_id added only via guarded Schema::ensure() ALTER (ON DELETE SET NULL, D-03/D-08), never in schema.sql orders block; suppliers table mirrors the fk_purchases_order idempotency pattern
 
 ### Pending Todos
 
@@ -138,6 +140,6 @@ Items acknowledged and carried forward from research:
 
 ## Session Continuity
 
-Last session: 2026-06-15T18:22:25.171Z
+Last session: 2026-06-15T19:18:07.738Z
 Stopped at: Phase 8 context gathered
-Resume file: .planning/phases/08-suppliers-and-product-cleanup/08-CONTEXT.md
+Resume file: None
