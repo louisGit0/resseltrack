@@ -4,6 +4,8 @@
 
 ResellTrack runs today in Docker/Apache with local filesystem sessions and image uploads. This milestone makes it fully operational on Vercel serverless: routing rewired through `vercel.json`, sessions moved to MySQL, images moved to Cloudflare R2, schema extracted to a one-shot migration, production secrets and security headers wired in, and every existing feature verified on the public URL. The application code changes are surgical — five files modified, three files added — while all models, views, and business logic remain untouched.
 
+**v2.0 milestone** (phases 8-10) adds supplier management, product ratings, and best-effort URL auto-fill on top of the live v1.0 deployment. Tech stack unchanged: PHP 8.3 MVC maison, Aiven MySQL 8, Cloudinary, Vercel. Schema changes go through `sql/schema.sql` + `bin/migrate.php` re-run (operator step).
+
 ## Phases
 
 **Phase Numbering:**
@@ -20,6 +22,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 5: Security Hardening and Production Configuration** - Lock down secrets, emit HSTS, update CSP for image domain, add boot safety assertion ✅ SEC-01..04 verified live
 - [x] **Phase 6: Performance and Reliability** - Fix the N+1 in `SaleController::productsMeta()` and harden `ExchangeRateService` with timeout and visible error (completed 2026-06-15)
 - [x] **Phase 7: Production Verification** - End-to-end verification of every existing feature on the live Vercel URL ✅ VERIF-01 PASS (milestone v1.0 complete)
+- [ ] **Phase 8: Suppliers and Product Cleanup** - CRUD fournisseurs, lien optionnel sur les commandes, purge Cloudinary à la suppression produit ⚠ nécessite re-run `bin/migrate.php`
+- [ ] **Phase 9: Product Ratings** - Note 1-5 + commentaire par produit, éditable après réception, affichée en liste et fiche ⚠ nécessite re-run `bin/migrate.php`
+- [ ] **Phase 10: Product URL Auto-fill** - Scrape best-effort d'une URL produit publique (AliExpress) pour pré-remplir titre/prix/image, repli manuel
 
 ## Phase Details
 
@@ -163,10 +168,65 @@ Plans:
 
 **Plans**: TBD
 
+---
+
+## v2.0 Phases
+
+### Phase 8: Suppliers and Product Cleanup
+
+**Goal**: Users can manage a personal supplier list (rated), link orders to suppliers from a dropdown, and product deletion no longer leaves orphaned images on Cloudinary
+**Depends on**: Phase 7 (v1.0 shipped and live)
+**Requirements**: SUP-01, SUP-02, OPS-06
+**DB/Operator step**: YES — re-run `php bin/migrate.php` after code deploy (creates `suppliers` table, adds nullable `supplier_id` FK column to `orders`)
+**Success Criteria** (what must be TRUE):
+
+  1. The navigation has a "Fournisseurs" tab; user can create, edit, and delete a supplier record (name, URL, rating 1-5, optional comment) and the data belongs only to their account
+  2. The order create/edit form shows an optional supplier dropdown pre-populated from the user's supplier list; saving with no selection is accepted and existing orders with a free-text `supplier` value continue to display correctly (backward compatible)
+  3. Deleting a product removes its cover image and every gallery image from Cloudinary (best-effort via the same try/catch pattern as `deleteImage()`); a Cloudinary failure is logged but does not block the delete, and the DB rows are always removed
+
+**New files**: `src/Models/Supplier.php`, `src/Controllers/SupplierController.php`, `src/Views/suppliers/index.php`, `src/Views/suppliers/form.php`
+**Modified files**: `sql/schema.sql` (suppliers table + orders.supplier_id column), `src/Controllers/OrderController.php` (pass suppliers list to form; accept supplier_id POST), `src/Views/orders/form.php` (supplier dropdown), `src/Controllers/ProductController.php` (destroy() adds Cloudinary purge), `src/Views/layout.php` (nav entry), `public/index.php` (route registration for suppliers CRUD)
+**Plans**: TBD
+**UI hint**: yes
+
+### Phase 9: Product Ratings
+
+**Goal**: Users can record a 1-5 star rating and a short note on any product after receiving it; ratings appear on the product list and detail page
+**Depends on**: Phase 8
+**Requirements**: RATE-01
+**DB/Operator step**: YES — re-run `php bin/migrate.php` after code deploy (adds `rating TINYINT UNSIGNED NULL` and `rating_note TEXT NULL` columns to `products`)
+**Success Criteria** (what must be TRUE):
+
+  1. The product edit form has a "Note" field (1-5) and a "Commentaire" textarea; submitting saves the rating alongside all other product fields without touching any existing data
+  2. The product list shows a visual indicator (stars or numeric badge) for rated products; unrated products show a neutral placeholder — the layout is not broken for either case
+  3. The product detail page displays the rating and the full note text, editable from the existing edit link
+
+**New files**: none (columns on existing table, views updated in place)
+**Modified files**: `sql/schema.sql` (products.rating + products.rating_note), `src/Models/Product.php` (include new columns in find/update queries), `src/Controllers/ProductController.php` (validate and save rating fields), `src/Views/products/form.php` (rating inputs), `src/Views/products/index.php` (rating badge in list), `src/Views/products/show.php` (rating display)
+**Plans**: TBD
+**UI hint**: yes
+
+### Phase 10: Product URL Auto-fill
+
+**Goal**: Pasting a public product URL (initially AliExpress product pages) into the product form attempts a server-side scrape and pre-fills title, price, and image; the form remains fully usable by manual entry when scraping fails or is blocked
+**Depends on**: Phase 9
+**Requirements**: IMPORT-01
+**DB/Operator step**: NO (no schema change; redeploy on next Vercel push)
+**Success Criteria** (what must be TRUE):
+
+  1. Clicking "Remplir depuis URL" on a recognised AliExpress product page URL pre-fills at least the product name field (and price/image when the page layout is parseable) — the fields are editable before the user saves
+  2. When the target site blocks the request (non-200, captcha, JS-rendered-only, or unrecognised HTML layout), the form shows a user-visible French message such as "Remplissage automatique indisponible — veuillez saisir manuellement" and all fields remain editable with no data loss
+  3. A product saved after using URL auto-fill is identical in the database to one saved via manual entry — the import path does not bypass validation or introduce extra fields
+
+**New files**: `src/Services/ProductImportService.php` (curl + HTML parsing; site-by-site; AliExpress first), new route and action (e.g. `POST /products/fetch-url` → `ProductController::fetchUrl()` returning JSON)
+**Modified files**: `src/Controllers/ProductController.php` (add `fetchUrl()` action returning JSON meta), `src/Views/products/form.php` (URL input + minimal JS to call the endpoint and populate fields), `public/index.php` (register the fetch-url route before parameterised product routes)
+**Plans**: TBD
+**UI hint**: yes
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
+v1.0 phases (1-7) complete. v2.0 executes in numeric order: 8 → 9 → 10
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -177,3 +237,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 5. Security Hardening and Production Configuration | 1/1 | Complete | 2026-06-15 |
 | 6. Performance and Reliability | 1/1 | Complete   | 2026-06-15 |
 | 7. Production Verification | 1/1 | Complete | 2026-06-15 |
+| 8. Suppliers and Product Cleanup | 0/TBD | Not started | - |
+| 9. Product Ratings | 0/TBD | Not started | - |
+| 10. Product URL Auto-fill | 0/TBD | Not started | - |

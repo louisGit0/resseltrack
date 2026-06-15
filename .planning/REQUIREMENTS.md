@@ -52,6 +52,27 @@ Requirements pour la mise en ligne fonctionnelle. Chacun est mappé à une phase
 
 - [x] **VERIF-01**: Chaque fonctionnalité existante (auth, produits + image, achats multi-devises, ventes avec garde de stock, commandes, dashboard, export CSV, profil) est vérifiée fonctionnelle sur l'URL Vercel déployée
 
+## v2.0 Requirements (jalon courant)
+
+Fonctionnalités produit ajoutées dans le jalon v2.0. Chacune sera mappée à une phase du roadmap.
+
+### Fournisseurs
+
+- [ ] **SUP-01**: Onglet **Fournisseurs** avec CRUD complet (nom, URL, note 1-5, commentaire), scopé par utilisateur (`WHERE user_id`)
+- [ ] **SUP-02**: Les commandes peuvent référencer **optionnellement** un fournisseur de la liste — le champ `supplier` texte libre actuel devient un menu déroulant optionnel, **rétrocompatible** avec les commandes existantes (le texte libre reste accepté)
+
+### Notation produit
+
+- [ ] **RATE-01**: Un produit porte une **note (1-5) + un commentaire**, éditables après réception, affichés sur la liste et la fiche produit
+
+### Auto-remplissage
+
+- [ ] **IMPORT-01**: Coller une **URL de produit public** sur le formulaire tente un **scrape serveur best-effort** (curl + parsing HTML) pour pré-remplir titre + prix + image, avec **repli manuel** si le site bloque ; implémenté **site par site** (cible initiale : pages produit AliExpress). Le scraping de pages de **commande privées** (authentifiées) est explicitement **hors périmètre**.
+
+### Nettoyage (dette v1.0)
+
+- [ ] **OPS-06**: La suppression d'un produit **purge ses objets Cloudinary** (cover + galerie), best-effort avec log — comme `deleteImage()` le fait déjà pour une photo
+
 ## v2 Requirements
 
 Reporté à un futur jalon. Suivi mais hors roadmap courant.
@@ -110,12 +131,16 @@ Quelles phases couvrent quels requirements.
 | PERF-01 | Phase 6 | Complete |
 | PERF-02 | Phase 6 | Complete |
 | VERIF-01 | Phase 7 | Done |
+| SUP-01 | Phase 8 | Pending |
+| SUP-02 | Phase 8 | Pending |
+| OPS-06 | Phase 8 | Pending |
+| RATE-01 | Phase 9 | Pending |
+| IMPORT-01 | Phase 10 | Pending |
 
 **Coverage:**
-- v1 requirements: 22 total
-- Mapped to phases: 22
-- Unmapped: 0 ✓
+- v1 requirements: 22 total — all Done (milestone v1.0 shipped)
+- v2.0 requirements: 5 total — all mapped (SUP-01/02 + OPS-06 → Phase 8 ; RATE-01 → Phase 9 ; IMPORT-01 → Phase 10)
 
 ---
 *Requirements defined: 2026-06-12*
-*Last updated: 2026-06-15 — SEC-01..04 marked complete after Phase 5 plan 01 execution*
+*Last updated: 2026-06-15 — v2.0 traceability filled in (phases 8-10 assigned)*
