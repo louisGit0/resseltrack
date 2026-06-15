@@ -389,6 +389,20 @@
         }
 
         syncCurrency();
+
+        // Supplier select ↔ free-text "Autre" toggle (SUP-02). Mirror of the
+        // currency .d-none toggle: show the free-text field only when nothing
+        // (i.e. "Autre") is selected. Called once on load so edit-mode legacy
+        // orders (supplier_id null, free-text present) render correctly.
+        const supplier = document.getElementById('o-supplier');
+        const supplierFreeWrap = document.getElementById('o-supplier-free');
+        if (supplier && supplierFreeWrap) {
+            function syncSupplier() {
+                supplierFreeWrap.classList.toggle('d-none', supplier.value !== '');
+            }
+            supplier.addEventListener('change', syncSupplier);
+            syncSupplier();
+        }
     }
 
     // ---------------------------------------------------------------

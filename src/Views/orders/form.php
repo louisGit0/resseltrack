@@ -1,11 +1,13 @@
 <?php
 /** @var ?array $order @var array $lines @var array $errors @var array $old
- *  @var string[] $productNames @var string[] $categories */
+ *  @var string[] $productNames @var string[] $categories @var array $suppliers */
 $isEdit = $order !== null;
 $action = $isEdit ? '/orders/' . (int) $order['id'] : '/orders';
 $val = static fn(string $k, $def = '') => $old[$k] ?? ($order[$k] ?? $def);
 $cur = $val('currency', 'EUR');
 $sym = cur_sym($cur);
+// Selected supplier id (string, '' = none/"Autre"). Old input wins, then edit-mode order.
+$selSupplierId = (string) $val('supplier_id', '');
 
 // Line rows: old input (after a validation error) wins, then the existing
 // order lines (edit mode), then one empty row.
@@ -68,7 +70,15 @@ $lineErrors = array_filter($errors, static fn($k) => str_starts_with($k, 'line')
             <div class="row g-3">
                 <div class="col-md-4">
                     <label class="form-label">Fournisseur</label>
-                    <input type="text" name="supplier" class="form-control" value="<?= e($val('supplier')) ?>" placeholder="Superbuy, AliExpress…">
+                    <select name="supplier_id" id="o-supplier" class="form-select">
+                        <option value="">Autre / saisie libre…</option>
+                        <?php foreach ($suppliers as $s): ?>
+                            <option value="<?= (int) $s['id'] ?>" <?= $selSupplierId === (string) $s['id'] ? 'selected' : '' ?>><?= e($s['name']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <div id="o-supplier-free" class="mt-2 <?= $selSupplierId !== '' ? 'd-none' : '' ?>">
+                        <input type="text" name="supplier" class="form-control" value="<?= e($val('supplier')) ?>" placeholder="Superbuy, AliExpress…">
+                    </div>
                 </div>
                 <div class="col-md-5">
                     <label class="form-label">URL de la commande</label>
