@@ -8,6 +8,7 @@ use App\Core\Controller;
 use App\Core\Csrf;
 use App\Models\Product;
 use App\Models\Purchase;
+use App\Services\ExchangeRateService;
 use App\Services\ProfitCalculator;
 
 final class PurchaseController extends Controller
@@ -173,11 +174,22 @@ final class PurchaseController extends Controller
         if (!in_array($currency, ['EUR', 'USD', 'CNY'], true)) {
             $errors['currency'] = 'Devise invalide.';
         }
-        // EUR is always rate 1; USD requires a strictly positive rate.
+        // EUR is always rate 1; USD/CNY requires a strictly positive rate.
         if ($currency === 'EUR') {
             $rate = 1.0;
         } elseif ($rate <= 0) {
-            $errors['exchange_rate'] = 'Le taux de change doit être strictement positif.';
+            // D-04: attempt server-side fallback before treating this as an error.
+            $fallback = (new ExchangeRateService())->latest($currency, 'EUR');
+            if ($fallback !== null && $fallback > 0) {
+                $rate = $fallback;
+                // Note: no error added — the fallback rate is silently used.
+            } else {
+                // D-05: fallback failed — block the submission with a clear message.
+                $errors['exchange_rate'] = sprintf(
+                    "Impossible d'obtenir un taux de change valide pour %s. Réessayez ou saisissez le taux manuellement.",
+                    htmlspecialchars($currency, ENT_QUOTES, 'UTF-8')
+                );
+            }
         }
         if (!$this->isValidDate($purchasedAt)) {
             $errors['purchased_at'] = "La date d'achat est invalide.";
