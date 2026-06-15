@@ -11,6 +11,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\Sale;
+use App\Models\Supplier;
 use App\Services\ProfitCalculator;
 
 /**
@@ -27,6 +28,7 @@ final class OrderController extends Controller
     private Order $orders;
     private Product $products;
     private Purchase $purchases;
+    private Supplier $suppliers;
 
     public function __construct()
     {
@@ -34,6 +36,7 @@ final class OrderController extends Controller
         $this->orders = new Order();
         $this->products = new Product();
         $this->purchases = new Purchase();
+        $this->suppliers = new Supplier();
     }
 
     public function index(): void
@@ -53,6 +56,7 @@ final class OrderController extends Controller
             'old'          => $old,
             'productNames' => array_column($this->products->allForUser(Auth::id()), 'name'),
             'categories'   => $this->products->categorySuggestions(Auth::id()),
+            'suppliers'    => $this->suppliers->allForUser(Auth::id()),
         ], 'Nouvelle commande');
     }
 
@@ -72,6 +76,7 @@ final class OrderController extends Controller
             'old'          => $old,
             'productNames' => array_column($this->products->allForUser($userId), 'name'),
             'categories'   => $this->products->categorySuggestions($userId),
+            'suppliers'    => $this->suppliers->allForUser($userId),
         ], 'Modifier la commande');
     }
 
@@ -194,7 +199,23 @@ final class OrderController extends Controller
      */
     private function parseInput(): array
     {
-        $supplier = trim((string) ($_POST['supplier'] ?? ''));
+        // Supplier resolution (SUP-02). The form posts BOTH the free-text "Autre"
+        // input (supplier) and the dropdown selection (supplier_id). Default to the
+        // free-text path; only when a posted id is owned by this user do we link it
+        // and dual-write the resolved name into the existing supplier text column (D-02).
+        $supplierFree = trim((string) ($_POST['supplier'] ?? ''));
+        $supplierId   = (int) ($_POST['supplier_id'] ?? 0);
+        $supplier     = $supplierFree;   // resolved-or-free name (existing column)
+        $resolvedId   = null;            // new orders.supplier_id (null = no link)
+        if ($supplierId > 0) {
+            // IDOR guard: re-validate ownership — NEVER trust the posted id.
+            $sup = $this->suppliers->find($supplierId, Auth::id());
+            if ($sup !== null) {
+                $resolvedId = (int) $sup['id'];
+                $supplier   = (string) $sup['name'];   // D-02 dual-write
+            }
+            // null/unowned id falls through to the free-text path (supplier_id stays null).
+        }
         $orderUrl = trim((string) ($_POST['order_url'] ?? ''));
         $orderedAt = (string) ($_POST['ordered_at'] ?? '');
         $currency = (string) ($_POST['currency'] ?? 'EUR');
@@ -273,7 +294,8 @@ final class OrderController extends Controller
         }
 
         $header = [
-            'supplier'      => $supplier,
+            'supplier'      => $supplier,       // resolved-or-free name; persistLines() copies it onto each line (D-04)
+            'supplier_id'   => $resolvedId,     // new column written by Order::create()/update()
             'order_url'     => $orderUrl,
             'currency'      => $currency,
             'exchange_rate' => $rate,

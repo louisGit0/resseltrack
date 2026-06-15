@@ -65,21 +65,22 @@ final class Order
     {
         $stmt = $this->db->prepare(
             'UPDATE orders SET
-                supplier = :supplier, order_url = :url, currency = :currency,
+                supplier = :supplier, supplier_id = :supplier_id, order_url = :url, currency = :currency,
                 exchange_rate = :rate, shipping_cost = :ship, customs_cost = :customs,
                 ordered_at = :ordered_at
              WHERE id = :id AND user_id = :uid'
         );
         $stmt->execute([
-            'supplier'   => $data['supplier'] ?: null,
-            'url'        => $data['order_url'] ?: null,
-            'currency'   => $data['currency'],
-            'rate'       => $data['exchange_rate'],
-            'ship'       => $data['shipping_cost'],
-            'customs'    => $data['customs_cost'],
-            'ordered_at' => $data['ordered_at'],
-            'id'         => $id,
-            'uid'        => $userId,
+            'supplier'    => $data['supplier'] ?: null,
+            'supplier_id' => $data['supplier_id'] ?? null,
+            'url'         => $data['order_url'] ?: null,
+            'currency'    => $data['currency'],
+            'rate'        => $data['exchange_rate'],
+            'ship'        => $data['shipping_cost'],
+            'customs'     => $data['customs_cost'],
+            'ordered_at'  => $data['ordered_at'],
+            'id'          => $id,
+            'uid'         => $userId,
         ]);
     }
 
@@ -87,20 +88,21 @@ final class Order
     {
         $stmt = $this->db->prepare(
             'INSERT INTO orders
-                (user_id, supplier, order_url, currency, exchange_rate,
+                (user_id, supplier, supplier_id, order_url, currency, exchange_rate,
                  shipping_cost, customs_cost, ordered_at)
              VALUES
-                (:uid, :supplier, :url, :currency, :rate, :ship, :customs, :ordered_at)'
+                (:uid, :supplier, :supplier_id, :url, :currency, :rate, :ship, :customs, :ordered_at)'
         );
         $stmt->execute([
-            'uid'        => $userId,
-            'supplier'   => $data['supplier'] ?: null,
-            'url'        => $data['order_url'] ?: null,
-            'currency'   => $data['currency'],
-            'rate'       => $data['exchange_rate'],
-            'ship'       => $data['shipping_cost'],
-            'customs'    => $data['customs_cost'],
-            'ordered_at' => $data['ordered_at'],
+            'uid'         => $userId,
+            'supplier'    => $data['supplier'] ?: null,
+            'supplier_id' => $data['supplier_id'] ?? null,
+            'url'         => $data['order_url'] ?: null,
+            'currency'    => $data['currency'],
+            'rate'        => $data['exchange_rate'],
+            'ship'        => $data['shipping_cost'],
+            'customs'     => $data['customs_cost'],
+            'ordered_at'  => $data['ordered_at'],
         ]);
         return (int) $this->db->lastInsertId();
     }
