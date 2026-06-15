@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: "Phase 5 complete — HSTS + boot safety gate verified live; SEC-01..04 satisfied"
-last_updated: "2026-06-15T09:55:00Z"
-last_activity: 2026-06-15 -- Phase 5 complete; SEC-01..04 verified live (HSTS present, gate passes on good config, /health exempt, CSP ok)
+status: verifying
+stopped_at: Completed 05-01-PLAN.md (isHttps detection + boot safety gate + HSTS + SEC-01/03 audit — Task 1 committed 772fa54, Task 2 audit-only, unpushed)
+last_updated: "2026-06-15T12:34:44.998Z"
+last_activity: 2026-06-15
 progress:
   total_phases: 7
-  completed_phases: 5
-  total_plans: 9
-  completed_plans: 9
-  percent: 71
+  completed_phases: 6
+  total_plans: 10
+  completed_plans: 10
+  percent: 86
 ---
 
 # Project State
@@ -27,20 +27,23 @@ See: .planning/PROJECT.md (updated 2026-06-12)
 
 Phase: 5 of 7 COMPLETE (Security Hardening and Production Configuration) → next: Phase 6
 Plan: 1 of 1 in Phase 5 (complete + verified live)
-Status: Phase 5 done. HSTS emitted (app + Vercel platform), boot safety gate live (passes on good config; /login 200, /health exempt 200), CSP img-src res.cloudinary.com, secrets audit clean. SEC-01..04 verified live.
+Status: Phase complete — ready for verification
 Last activity: 2026-06-15
 
-Progress: [███████░░░] 71% (5/7 phases)
+Progress: [██████████] 100%
 
 ## Optional follow-up
+
 - SEC-04 negative test (deliberately set SESSION_SECURE=0 in Vercel → confirm the French 500 config page, then revert) NOT run — it temporarily breaks the live site. Gate logic proven by local predicate simulation + code review + good-config live pass. Run only if explicitly desired.
 
 ## Resolved (this session)
+
 - Aiven DB power-off (free-tier inactivity): RESOLVED — operator powered it back on. Keep-alive (.github/workflows/keepalive.yml pings /health every 10 min) prevents recurrence.
 - composer.lock was missing → build failed; fixed (now dev-only after dropping aws-sdk-php).
 - Provider pivot R2→Supabase→Cloudinary (card/quota constraints) — landed on Cloudinary (free, no card).
 
 ## Open follow-up (out of scope, tracked)
+
 - ProductController::destroy() does not purge a deleted product's Cloudinary cover/gallery objects (orphans). deleteImage() already does. Spawned as a separate task.
 - Phase 5 SEC-03 (CSP for image domain) is partly pre-satisfied: img-src already allows res.cloudinary.com.
 
@@ -72,6 +75,7 @@ Progress: [███████░░░] 71% (5/7 phases)
 | Phase 02-database-and-schema-migration P01 | 2m | 2 tasks | 5 files |
 | Phase 03-persistent-sessions P01 | 15m | 3 tasks | 5 files |
 | Phase 04-image-storage-r2 P01 | 6 | 3 tasks | 6 files |
+| Phase 06-performance-and-reliability P01 | 15m | 3 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -100,6 +104,9 @@ Recent decisions affecting current work:
 - 05-01: Boot gate placed after /health early-return and before Auth::start() — keep-alive always responds (D-04)
 - 05-01: App-level HSTS max-age=31536000; includeSubDomains, no preload-list submission — Vercel platform already emits 2-year HSTS; app header is defense-in-depth (D-02)
 - 05-01: Boot gate error page is generic French HTML; specific reason goes to error_log only — no config state leaked to HTTP (RESEARCH Pitfall 4)
+- [Phase ?]: batch fetch + PHP grouping
+- [Phase ?]: null on all failure paths, 4 error_log sites
+- [Phase ?]: blocks before unitCostEur on null fallback
 
 ### Pending Todos
 
@@ -126,6 +133,6 @@ Items acknowledged and carried forward from research:
 
 ## Session Continuity
 
-Last session: 2026-06-15T09:51:15Z
+Last session: 2026-06-15T12:34:44.991Z
 Stopped at: Completed 05-01-PLAN.md (isHttps detection + boot safety gate + HSTS + SEC-01/03 audit — Task 1 committed 772fa54, Task 2 audit-only, unpushed)
 Resume file: None

@@ -45,8 +45,8 @@ Requirements pour la mise en ligne fonctionnelle. Chacun est mappé à une phase
 
 ### Fiabilité (bloquant pour « fonctionnel »)
 
-- [ ] **PERF-01**: La page de création/édition de vente charge sans timeout — le N+1 de `SaleController::productsMeta()` est remplacé par une requête agrégée
-- [ ] **PERF-02**: `ExchangeRateService` utilise `curl` avec timeout (5 s) et logge ses échecs ; un échec d'API n'enregistre **pas** silencieusement un coût de 0,00 € (avertissement visible)
+- [x] **PERF-01**: La page de création/édition de vente charge sans timeout — le N+1 de `SaleController::productsMeta()` est remplacé par une requête agrégée
+- [x] **PERF-02**: `ExchangeRateService` utilise `curl` avec timeout (5 s) et logge ses échecs ; un échec d'API n'enregistre **pas** silencieusement un coût de 0,00 € (avertissement visible)
 
 ### Vérification en production
 
@@ -107,8 +107,8 @@ Quelles phases couvrent quels requirements.
 | SEC-02 | Phase 5 | Complete |
 | SEC-03 | Phase 5 | Complete |
 | SEC-04 | Phase 5 | Complete |
-| PERF-01 | Phase 6 | Pending |
-| PERF-02 | Phase 6 | Pending |
+| PERF-01 | Phase 6 | Complete |
+| PERF-02 | Phase 6 | Complete |
 | VERIF-01 | Phase 7 | Pending |
 
 **Coverage:**

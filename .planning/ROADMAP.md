@@ -18,7 +18,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Persistent Sessions** - Replace ephemeral file sessions with MySQL-backed sessions that survive across Lambda invocations ✅ verified live
 - [x] **Phase 4: Image Storage** - Image upload/delete via Cloudinary (pivoted from R2); 3.5 MB size guard ✅ STORE-01..05 verified live
 - [x] **Phase 5: Security Hardening and Production Configuration** - Lock down secrets, emit HSTS, update CSP for image domain, add boot safety assertion ✅ SEC-01..04 verified live
-- [ ] **Phase 6: Performance and Reliability** - Fix the N+1 in `SaleController::productsMeta()` and harden `ExchangeRateService` with timeout and visible error
+- [x] **Phase 6: Performance and Reliability** - Fix the N+1 in `SaleController::productsMeta()` and harden `ExchangeRateService` with timeout and visible error (completed 2026-06-15)
 - [ ] **Phase 7: Production Verification** - End-to-end verification of every existing feature on the live Vercel URL
 
 ## Phase Details
@@ -146,7 +146,7 @@ Plans:
 Plans:
 **Wave 1**
 
-- [ ] 06-01-PLAN.md — Replace the N+1 in SaleController::productsMeta() with 3 fixed queries (new Purchase::lotsForUser + Sale::soldQtyByProduct, PHP grouping, ProfitCalculator unchanged); rewrite ExchangeRateService::latest() to curl (5s timeout + logging); add server-side FX fallback + block-on-failure in PurchaseController::validate() + identity unit test. Single autonomous plan — no operator/Wave-2 step (live smoke checks folded into verification for the orchestrator).
+- [x] 06-01-PLAN.md — Replace the N+1 in SaleController::productsMeta() with 3 fixed queries (new Purchase::lotsForUser + Sale::soldQtyByProduct, PHP grouping, ProfitCalculator unchanged); rewrite ExchangeRateService::latest() to curl (5s timeout + logging); add server-side FX fallback + block-on-failure in PurchaseController::validate() + identity unit test. Single autonomous plan — no operator/Wave-2 step (live smoke checks folded into verification for the orchestrator).
 
 ### Phase 7: Production Verification
 
@@ -175,5 +175,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 3. Persistent Sessions | 2/2 | Complete | 2026-06-12 |
 | 4. Image Storage (Cloudinary) | 2/2 | Complete | 2026-06-15 |
 | 5. Security Hardening and Production Configuration | 1/1 | Complete | 2026-06-15 |
-| 6. Performance and Reliability | 0/1 | Planned | - |
+| 6. Performance and Reliability | 1/1 | Complete   | 2026-06-15 |
 | 7. Production Verification | 0/? | Not started | - |
