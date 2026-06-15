@@ -957,6 +957,34 @@ a:hover { color: var(--rt-primary); }
 }
 
 /* =========================================================
+   Widget de note par étoiles (réutilisable)
+   ========================================================= */
+.star-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: .15rem;
+}
+.star-btn {
+    border: 0;
+    background: none;
+    padding: .1rem .15rem;
+    line-height: 1;
+    font-size: 1.45rem;
+    color: var(--rt-border-strong);
+    cursor: pointer;
+    transition: color .12s ease, transform .12s ease;
+}
+.star-btn:hover { transform: scale(1.12); }
+.star-btn.is-active { color: var(--rt-warning); }
+.star-btn:focus-visible { outline: 2px solid var(--rt-primary); outline-offset: 2px; border-radius: 6px; }
+.star-clear { font-size: .78rem; text-decoration: none; margin-left: .35rem; }
+.star-clear:hover { text-decoration: underline; }
+
+/* Étoiles en lecture seule (liste fournisseurs) */
+.supplier-stars { color: var(--rt-warning); white-space: nowrap; font-size: .95rem; }
+.supplier-stars .bi-star { color: var(--rt-border-strong); }
+
+/* =========================================================
    Responsive
    ========================================================= */
 @media (max-width: 991.98px) {

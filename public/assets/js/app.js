@@ -551,6 +551,63 @@
         });
     }
 
+    // ---------------------------------------------------------------
+    // Widget de note par étoiles (réutilisable) — hidden input + bi-star
+    // Cible chaque conteneur [data-star-rating] : pioche son input caché,
+    // ses boutons .star-btn (data-value 1..5) et son bouton [data-star-clear].
+    // Cliquable, effaçable (note nulle), avec aperçu au survol.
+    // Conçu générique pour être réutilisé (ex. note produit, Phase 9).
+    // ---------------------------------------------------------------
+    function initStarRating() {
+        const widgets = document.querySelectorAll('[data-star-rating]');
+        if (!widgets.length) return; // garde : no-op si aucun widget sur la page
+
+        widgets.forEach(function (widget) {
+            const input = widget.querySelector('input[type="hidden"]');
+            const stars = Array.from(widget.querySelectorAll('.star-btn'));
+            const clearBtn = widget.querySelector('[data-star-clear]');
+            if (!input || !stars.length) return;
+
+            function paint(value) {
+                stars.forEach(function (btn) {
+                    const v = parseInt(btn.getAttribute('data-value'), 10) || 0;
+                    const icon = btn.querySelector('i');
+                    const filled = v <= value;
+                    btn.classList.toggle('is-active', filled);
+                    if (icon) {
+                        icon.classList.toggle('bi-star-fill', filled);
+                        icon.classList.toggle('bi-star', !filled);
+                    }
+                });
+            }
+
+            function current() {
+                const v = parseInt(input.value, 10);
+                return isNaN(v) ? 0 : v;
+            }
+
+            stars.forEach(function (btn) {
+                const v = parseInt(btn.getAttribute('data-value'), 10) || 0;
+                btn.addEventListener('click', function () {
+                    input.value = String(v);
+                    paint(v);
+                });
+                btn.addEventListener('mouseenter', function () { paint(v); }); // aperçu survol
+            });
+
+            widget.addEventListener('mouseleave', function () { paint(current()); });
+
+            if (clearBtn) {
+                clearBtn.addEventListener('click', function () {
+                    input.value = ''; // note nulle → le serveur stocke null
+                    paint(0);
+                });
+            }
+
+            paint(current()); // état initial (mode édition pré-rempli)
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         initPurchaseForm();
         initSaleForm();
@@ -558,6 +615,7 @@
         initDashboardChart();
         initCategoryChart();
         initConfirmModal();
+        initStarRating();
         initToasts();
         initCountUp();
         initPhotoGallery();
