@@ -15,6 +15,7 @@ use App\Controllers\ProductController;
 use App\Controllers\ProfileController;
 use App\Controllers\PurchaseController;
 use App\Controllers\SaleController;
+use App\Controllers\SupplierController;
 use App\Controllers\DashboardController;
 use App\Controllers\ExportController;
 
@@ -175,6 +176,14 @@ $router->get('/orders/{id}/edit', [OrderController::class, 'edit']);
 $router->post('/orders', [OrderController::class, 'store']);
 $router->post('/orders/{id}', [OrderController::class, 'update']);
 $router->post('/orders/{id}/delete', [OrderController::class, 'destroy']);
+
+// Suppliers — /suppliers/create MUST stay before /suppliers/{id}/edit (match order; no {id} GET show — D-09)
+$router->get('/suppliers', [SupplierController::class, 'index']);
+$router->get('/suppliers/create', [SupplierController::class, 'create']);
+$router->get('/suppliers/{id}/edit', [SupplierController::class, 'edit']);
+$router->post('/suppliers', [SupplierController::class, 'store']);
+$router->post('/suppliers/{id}', [SupplierController::class, 'update']);
+$router->post('/suppliers/{id}/delete', [SupplierController::class, 'destroy']);
 
 // Purchases
 $router->get('/purchases', [PurchaseController::class, 'index']);

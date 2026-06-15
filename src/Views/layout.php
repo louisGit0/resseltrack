@@ -28,6 +28,7 @@ $navHtml = static function () use ($isActive, $authName): string {
         <a class="nav-link <?= $isActive('/orders') ?>" href="/orders"><i class="bi bi-receipt"></i> Commandes</a>
         <a class="nav-link <?= $isActive('/purchases') ?>" href="/purchases"><i class="bi bi-bag-plus"></i> Achats</a>
         <a class="nav-link <?= $isActive('/sales') ?>" href="/sales"><i class="bi bi-cash-coin"></i> Ventes</a>
+        <a class="nav-link <?= $isActive('/suppliers') ?>" href="/suppliers"><i class="bi bi-truck"></i> Fournisseurs</a>
     </nav>
 
     <div class="sidebar-section">Exports CSV</div>
