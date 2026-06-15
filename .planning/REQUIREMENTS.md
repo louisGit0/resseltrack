@@ -30,11 +30,11 @@ Requirements pour la mise en ligne fonctionnelle. Chacun est mappé à une phase
 
 ### Stockage des images
 
-- [ ] **STORE-01**: L'upload d'une image produit l'écrit sur **Cloudflare R2** et stocke son URL publique en base
-- [ ] **STORE-02**: Les images uploadées s'affichent en production depuis leur URL R2
-- [ ] **STORE-03**: La suppression d'une image produit retire l'objet correspondant sur R2
-- [ ] **STORE-04**: Les images existantes (chemins disque locaux) sont migrées vers R2 avant la mise en ligne, ou une stratégie de repli est documentée
-- [ ] **STORE-05**: Une garde de taille (~3,5 Mo) empêche les uploads dépassant la limite Vercel (4,5 Mo) avec un message clair à l'utilisateur
+- [x] **STORE-01**: L'upload d'une image produit l'écrit sur **Cloudflare R2** et stocke son URL publique en base
+- [x] **STORE-02**: Les images uploadées s'affichent en production depuis leur URL R2
+- [x] **STORE-03**: La suppression d'une image produit retire l'objet correspondant sur R2
+- [x] **STORE-04**: Les images existantes (chemins disque locaux) sont migrées vers R2 avant la mise en ligne, ou une stratégie de repli est documentée
+- [x] **STORE-05**: Une garde de taille (~3,5 Mo) empêche les uploads dépassant la limite Vercel (4,5 Mo) avec un message clair à l'utilisateur
 
 ### Sécurité & Configuration production
 
@@ -98,11 +98,11 @@ Quelles phases couvrent quels requirements.
 | SESS-02 | Phase 3 | Done |
 | SESS-03 | Phase 3 | Done |
 | SESS-04 | Phase 3 | Done |
-| STORE-01 | Phase 4 | Pending |
-| STORE-02 | Phase 4 | Pending |
-| STORE-03 | Phase 4 | Pending |
-| STORE-04 | Phase 4 | Pending |
-| STORE-05 | Phase 4 | Pending |
+| STORE-01 | Phase 4 | Complete |
+| STORE-02 | Phase 4 | Complete |
+| STORE-03 | Phase 4 | Complete |
+| STORE-04 | Phase 4 | Complete |
+| STORE-05 | Phase 4 | Complete |
 | SEC-01 | Phase 5 | Pending |
 | SEC-02 | Phase 5 | Pending |
 | SEC-03 | Phase 5 | Pending |

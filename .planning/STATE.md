@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: "Phase 3 complete — persistent MySQL sessions verified live"
-last_updated: "2026-06-12T16:12:00.000Z"
-last_activity: 2026-06-12 -- Phase 3 complete; SESS-01/02/03/04 verified live (login persists, cookie Secure+HttpOnly+SameSite, CSRF OK)
+status: completed
+stopped_at: Completed 03-01-PLAN.md (DatabaseSessionHandler + sessions DDL + Auth wiring — all 3 tasks committed, unpushed)
+last_updated: "2026-06-15T07:06:04.698Z"
+last_activity: 2026-06-15
 progress:
   total_phases: 7
   completed_phases: 3
-  total_plans: 6
-  completed_plans: 6
+  total_plans: 8
+  completed_plans: 7
   percent: 43
 ---
 
@@ -25,14 +25,15 @@ See: .planning/PROJECT.md (updated 2026-06-12)
 
 ## Current Position
 
-Phase: 3 of 7 COMPLETE (Persistent Sessions) → next: Phase 4
-Plan: 2 of 2 in Phase 3 (both complete)
-Status: Phase 3 verified live — MySQL-backed sessions persist across Lambda invocations; cookie Secure+HttpOnly+SameSite=Lax; CSRF intact
-Last activity: 2026-06-12 -- 03-02 complete; SESS-01/02/03/04 PASS live; test data cleaned up
+Phase: 4 of 7 IN PROGRESS (Image Storage on R2) → Plan 01 complete, Plan 02 (operator) pending
+Plan: 1 of 2 in Phase 4 complete (code half done; 04-02 operator half next)
+Status: Plan 04-01 complete — ready for operator setup (04-02)
+Last activity: 2026-06-15
 
-Progress: [████░░░░░░] 43% (3/7 phases)
+Progress: [█████████░] 88%
 
 ## Resolved follow-ups
+
 - Local Docker TLS regression (02-02): RESOLVED as non-applicable — user confirmed (2026-06-12) Docker local dev is no longer used. is_file TLS guard left as-is; no code change needed.
 
 ## Performance Metrics
@@ -58,6 +59,7 @@ Progress: [████░░░░░░] 43% (3/7 phases)
 | Phase 01-routing-and-front-controller P01 | 2m | 2 tasks | 4 files |
 | Phase 02-database-and-schema-migration P01 | 2m | 2 tasks | 5 files |
 | Phase 03-persistent-sessions P01 | 15m | 3 tasks | 5 files |
+| Phase 04-image-storage-r2 P01 | 6 | 3 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -78,6 +80,10 @@ Recent decisions affecting current work:
 - 02-01: Schema::ensure() removed from Database::connection() (DB-03) — all DDL lives exclusively in bin/migrate.php
 - 03-01: DatabaseSessionHandler in App\Core reuses Database::connection() singleton — no new PDO; row-alias UPSERT (MySQL 8.0.19+); lazy expires_at read; session.gc_probability=0
 - 03-01: Auth::start() registers handler before session_start(); cookie lifetime changed from 0 to 30*86400 (30 days); Csrf.php + login/logout untouched
+- 04-01: Full aws/aws-sdk-php SDK ships in Lambda (~37.5MB) — no removeUnusedServices because vercel-php uses --no-scripts; fits within 250MB limit
+- 04-01: CSP img-src updated in plan 04-01 (not deferred to Phase 5) — STORE-02 images display is false while r2.dev blocked; pre-satisfies Phase 5 SEC-03
+- 04-01: Full r2.dev URL stored in DB (D-05); views render img src unchanged; key derived by stripping base URL at delete time
+- 04-01: PHP class constants cannot use cast expressions; MAX_UPLOAD_BYTES = 3670016 (literal, =(int)(3.5*1024*1024)) with comment documentation
 
 ### Pending Todos
 
@@ -104,6 +110,6 @@ Items acknowledged and carried forward from research:
 
 ## Session Continuity
 
-Last session: 2026-06-12T00:00:00.000Z
-Stopped at: Completed 03-01-PLAN.md (DatabaseSessionHandler + sessions DDL + Auth wiring — all 3 tasks committed, unpushed)
+Last session: 2026-06-15T07:06:04.691Z
+Stopped at: Completed 04-01-PLAN.md (aws/aws-sdk-php + R2Storage service + ProductController disk→R2 swap — all 3 tasks committed, unpushed)
 Resume file: None
