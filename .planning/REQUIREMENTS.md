@@ -50,7 +50,7 @@ Requirements pour la mise en ligne fonctionnelle. Chacun est mappé à une phase
 
 ### Vérification en production
 
-- [ ] **VERIF-01**: Chaque fonctionnalité existante (auth, produits + image, achats multi-devises, ventes avec garde de stock, commandes, dashboard, export CSV, profil) est vérifiée fonctionnelle sur l'URL Vercel déployée
+- [x] **VERIF-01**: Chaque fonctionnalité existante (auth, produits + image, achats multi-devises, ventes avec garde de stock, commandes, dashboard, export CSV, profil) est vérifiée fonctionnelle sur l'URL Vercel déployée
 
 ## v2 Requirements
 
@@ -109,7 +109,7 @@ Quelles phases couvrent quels requirements.
 | SEC-04 | Phase 5 | Complete |
 | PERF-01 | Phase 6 | Complete |
 | PERF-02 | Phase 6 | Complete |
-| VERIF-01 | Phase 7 | Pending |
+| VERIF-01 | Phase 7 | Done |
 
 **Coverage:**
 - v1 requirements: 22 total

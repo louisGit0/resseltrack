@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: "Phase 6 complete — N+1 fixed, ExchangeRateService hardened + FX endpoint fixed (frankfurter.dev); PERF-01/02 verified live"
-last_updated: "2026-06-15T12:55:00Z"
-last_activity: 2026-06-15 -- Phase 6 complete; PERF-01/02 verified live (USD fallback fetches real rate → correct EUR cost, never 0.00)
+status: complete
+stopped_at: "Milestone v1.0 COMPLETE — all 7 phases done, VERIF-01 passed live"
+last_updated: "2026-06-15T14:05:00Z"
+last_activity: 2026-06-15 -- Phase 7 complete; VERIF-01 PASS (every feature verified live); milestone v1.0 done
 progress:
   total_phases: 7
-  completed_phases: 6
-  total_plans: 10
-  completed_plans: 10
-  percent: 86
+  completed_phases: 7
+  total_plans: 11
+  completed_plans: 11
+  percent: 100
 ---
 
 # Project State
@@ -21,16 +21,19 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-12)
 
 **Core value:** Tout ce qui fonctionne en local fonctionne à l'identique une fois déployé sur Vercel — le site en ligne est pleinement opérationnel pour de vrais utilisateurs.
-**Current focus:** Phase 7 — Production Verification (final phase, next)
+**Current focus:** ✅ Milestone v1.0 COMPLETE — ResellTrack fully operational on Vercel for real users.
 
 ## Current Position
 
-Phase: 6 of 7 COMPLETE (Performance and Reliability) → next: Phase 7 (final)
-Plan: 1 of 1 in Phase 6 (complete + verified live)
-Status: Phase 6 done. N+1 in productsMeta() replaced by 3 fixed queries (ProfitCalculator unchanged). ExchangeRateService curl-hardened; server-side FX fallback works (fetched 0.8645 → unit_cost_eur 8.6453, never 0.00); FX endpoint fixed app→dev (frankfurter.app was retired/301). PERF-01/02 verified live.
-Last activity: 2026-06-15
+ALL 7 phases COMPLETE. VERIF-01 passed live (07-VERIFICATION.md). Milestone v1.0 done.
+Live: https://resseltrack-nu.vercel.app — routing+CDN, Aiven MySQL/TLS, persistent sessions, Cloudinary images, HSTS+boot-gate, N+1 fixed + FX reliable. Production DB pristine (test data cleaned).
 
-Progress: [████████░░] 86% (6/7 phases)
+Progress: [██████████] 100% (7/7 phases, all requirements Done)
+
+## Possible next steps (post-v1.0, optional)
+- Spawned task: purge Cloudinary images on product delete.
+- OrderController FX fallback parity (P6 D-06 gap).
+- Deferred v2 backlog: custom domain, ProxySQL, /health connection-count, graceful 503, CSRF rotation, rate limiting on /register & /export.
 
 ## Optional follow-up
 
