@@ -59,7 +59,7 @@ Fonctionnalités produit ajoutées dans le jalon v2.0. Chacune sera mappée à u
 ### Fournisseurs
 
 - [x] **SUP-01**: Onglet **Fournisseurs** avec CRUD complet (nom, URL, note 1-5, commentaire), scopé par utilisateur (`WHERE user_id`)
-- [ ] **SUP-02**: Les commandes peuvent référencer **optionnellement** un fournisseur de la liste — le champ `supplier` texte libre actuel devient un menu déroulant optionnel, **rétrocompatible** avec les commandes existantes (le texte libre reste accepté)
+- [x] **SUP-02**: Les commandes peuvent référencer **optionnellement** un fournisseur de la liste — le champ `supplier` texte libre actuel devient un menu déroulant optionnel, **rétrocompatible** avec les commandes existantes (le texte libre reste accepté)
 
 ### Notation produit
 
@@ -132,7 +132,7 @@ Quelles phases couvrent quels requirements.
 | PERF-02 | Phase 6 | Complete |
 | VERIF-01 | Phase 7 | Done |
 | SUP-01 | Phase 8 | Complete |
-| SUP-02 | Phase 8 | Pending |
+| SUP-02 | Phase 8 | Complete |
 | OPS-06 | Phase 8 | Complete |
 | RATE-01 | Phase 9 | Pending |
 | IMPORT-01 | Phase 10 | Pending |

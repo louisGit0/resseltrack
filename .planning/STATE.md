@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Suppliers, ratings & auto-fill
 status: executing
-stopped_at: Completed 08-04-PLAN.md
-last_updated: "2026-06-15T19:38:11.389Z"
+stopped_at: Completed 08-05-PLAN.md
+last_updated: "2026-06-15T19:43:59.868Z"
 last_activity: 2026-06-15
 progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 6
-  completed_plans: 4
-  percent: 67
+  completed_plans: 5
+  percent: 83
 ---
 
 # Project State
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-06-12)
 ## Current Position
 
 Phase: 08 (suppliers-and-product-cleanup) — EXECUTING
-Plan: 5 of 6
+Plan: 6 of 6
 Status: Ready to execute
 Last activity: 2026-06-15
 
@@ -84,6 +84,7 @@ Last activity: 2026-06-15
 | Phase 08 P02 | 4m | 1 tasks | 1 files |
 | Phase 08 P03 | 3min | 2 tasks | 4 files |
 | Phase 08 P04 | 9m | 2 tasks | 4 files |
+| Phase 08 P05 | 6m | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -121,6 +122,7 @@ Recent decisions affecting current work:
 - [Phase ?]: [Phase 08]: 08-03: Supplier model mirrors Order.php (LEFT JOIN orders COUNT(o.id) AS orders_count GROUP BY for D-07; :uid-scoped; find() returns null when not owned; delete() plain DELETE — FK ON DELETE SET NULL handles unlink per D-08)
 - [Phase ?]: [Phase 08]: 08-03: SupplierController clones ProductController CRUD (Auth::require() ctor; Csrf::validate() first line of every POST; ownership-or-redirect on edit/update; validate() enforces name required + rating in {null,1..5}); no show action / no GET /suppliers/{id} (D-09 table-only); URL stored trimmed/null without filter_var (matches order_url convention)
 - [Phase ?]: [Phase 08]: 08-03: SUP-01 backend only — model/controller/6 routes (create before {id}/edit)/Fournisseurs nav (bi-truck, single navHtml line covers sidebar+offcanvas, D-10). Views land in 08-04; SUP-01 requirement NOT marked complete until 08-04
+- [Phase 08]: 08-05: SUP-02 COMPLETE — OrderController::parseInput() IDOR-guards posted supplier_id via Supplier::find($id, Auth::id()); owned id → dual-write resolved name into the free-text supplier column (D-02) + set supplier_id, unowned/absent → free-text path with supplier_id null (T-08-15). $header carries both supplier + supplier_id; persistLines() UNCHANGED (D-04). Order::create()/update() persist supplier_id (?? null). orders/form.php: free-text input → select#o-supplier + #o-supplier-free wrapper (e()-escaped option labels, $val('supplier_id') preselect); app.js syncSupplier() mirrors syncCurrency .d-none toggle, change+load, element-guarded; initStarRating() intact. SUP-02 marked complete in REQUIREMENTS.md
 - [Phase 08]: 08-04: SUP-01 UI COMPLETE — suppliers/index.php full table (D-09: name/clickable URL/rating stars/comment/orders_count, escaped, confirm-modal delete) + suppliers/form.php (star-widget hidden input name=rating, clearable to unrated D-06). Reusable initStarRating() in app.js keyed on [data-star-rating]+input[type=hidden] (generic for Phase 9 reuse), DOM-guarded, registered on DOMContentLoaded; .star-btn/.supplier-stars CSS; no SUP-02 code touched. SUP-01 marked complete in REQUIREMENTS.md
 
 ### Pending Todos
@@ -148,6 +150,6 @@ Items acknowledged and carried forward from research:
 
 ## Session Continuity
 
-Last session: 2026-06-15T19:38:11.379Z
-Stopped at: Completed 08-04-PLAN.md
+Last session: 2026-06-15T19:43:59.868Z
+Stopped at: Completed 08-05-PLAN.md
 Resume file: None
