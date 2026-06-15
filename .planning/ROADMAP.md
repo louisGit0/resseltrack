@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Database and Schema Migration** - Provision Aiven MySQL 8, configure TLS, and apply the schema via a one-shot CLI script ✅ live Aiven MySQL verified
 - [x] **Phase 3: Persistent Sessions** - Replace ephemeral file sessions with MySQL-backed sessions that survive across Lambda invocations ✅ verified live
 - [x] **Phase 4: Image Storage** - Image upload/delete via Cloudinary (pivoted from R2); 3.5 MB size guard ✅ STORE-01..05 verified live
-- [ ] **Phase 5: Security Hardening and Production Configuration** - Lock down secrets, emit HSTS, update CSP for R2 domain, add boot safety assertion
+- [x] **Phase 5: Security Hardening and Production Configuration** - Lock down secrets, emit HSTS, update CSP for image domain, add boot safety assertion ✅ SEC-01..04 verified live
 - [ ] **Phase 6: Performance and Reliability** - Fix the N+1 in `SaleController::productsMeta()` and harden `ExchangeRateService` with timeout and visible error
 - [ ] **Phase 7: Production Verification** - End-to-end verification of every existing feature on the live Vercel URL
 
@@ -170,6 +170,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 2. Database and Schema Migration | 2/2 | Complete | 2026-06-12 |
 | 3. Persistent Sessions | 2/2 | Complete | 2026-06-12 |
 | 4. Image Storage (Cloudinary) | 2/2 | Complete | 2026-06-15 |
-| 5. Security Hardening and Production Configuration | 1/1 | Complete (awaiting live deploy verification) | 2026-06-15 |
+| 5. Security Hardening and Production Configuration | 1/1 | Complete | 2026-06-15 |
 | 6. Performance and Reliability | 0/? | Not started | - |
 | 7. Production Verification | 0/? | Not started | - |

@@ -164,3 +164,19 @@ None — this plan is fully autonomous. No new environment variables, no new ext
 ---
 *Phase: 05-security-hardening-and-production-configuration*
 *Completed: 2026-06-15*
+
+---
+
+## Live verification (orchestrator, 2026-06-15, commit af3ed1b)
+
+| Check | Result |
+|-------|--------|
+| Site starts with good config (boot gate passes) | PASS — `/login` HTTP 200, renders form (NOT the config error page) → all prod vars present (SESSION_SECURE, DB_*, CLOUDINARY_*) |
+| `/health` exempt from gate | PASS — HTTP 200 `{"status":"ok","db":"up"}` |
+| SEC-02 HSTS present | PASS — `Strict-Transport-Security: max-age=31536000; includeSubDomains` |
+| SEC-03 CSP img-src | PASS — `img-src 'self' data: https://res.cloudinary.com` |
+| SEC-01 secrets audit | PASS — no committed secret; `.env` gitignored; CA cert public |
+
+SEC-04 negative path (deliberate SESSION_SECURE=0 → 500 config page) NOT run live (destructive — would break the live site); proven by the local `$isHttps` predicate simulation (gate ARMED on HTTPS, OFF on HTTP) + code review. Optional to run later.
+
+**Phase 5 COMPLETE.** No operator step was needed (HTTPS detection avoided APP_ENV).

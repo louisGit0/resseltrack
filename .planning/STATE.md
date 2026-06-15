@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: "Phase 5 plan 01 complete — boot gate + HSTS + SEC-01/03 audit; ready for Vercel redeploy"
-last_updated: "2026-06-15T09:51:15Z"
-last_activity: 2026-06-15 -- Phase 5 plan 01 complete; SEC-01..04 satisfied locally; awaiting orchestrator redeploy + live smoke checks
+stopped_at: "Phase 5 complete — HSTS + boot safety gate verified live; SEC-01..04 satisfied"
+last_updated: "2026-06-15T09:55:00Z"
+last_activity: 2026-06-15 -- Phase 5 complete; SEC-01..04 verified live (HSTS present, gate passes on good config, /health exempt, CSP ok)
 progress:
   total_phases: 7
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 9
   completed_plans: 9
-  percent: 64
+  percent: 71
 ---
 
 # Project State
@@ -21,16 +21,19 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-12)
 
 **Core value:** Tout ce qui fonctionne en local fonctionne à l'identique une fois déployé sur Vercel — le site en ligne est pleinement opérationnel pour de vrais utilisateurs.
-**Current focus:** Phase 5 — Security Hardening & Production Configuration (next)
+**Current focus:** Phase 6 — Performance & Reliability (next)
 
 ## Current Position
 
-Phase: 5 of 7 IN PROGRESS (Security Hardening and Production Configuration)
-Plan: 1 of 1 in Phase 5 (complete — awaiting live redeploy verification)
-Status: Phase 5 plan 01 complete. Boot gate + HSTS + SEC-01/03 audit all pass locally. Commit 772fa54 unpushed. Orchestrator runs live smoke checks (HSTS curl, /login 200, gate negative test) post-deploy.
+Phase: 5 of 7 COMPLETE (Security Hardening and Production Configuration) → next: Phase 6
+Plan: 1 of 1 in Phase 5 (complete + verified live)
+Status: Phase 5 done. HSTS emitted (app + Vercel platform), boot safety gate live (passes on good config; /login 200, /health exempt 200), CSP img-src res.cloudinary.com, secrets audit clean. SEC-01..04 verified live.
 Last activity: 2026-06-15
 
-Progress: [███████░░░] 64% (9/9 plans complete; Phase 5 code done)
+Progress: [███████░░░] 71% (5/7 phases)
+
+## Optional follow-up
+- SEC-04 negative test (deliberately set SESSION_SECURE=0 in Vercel → confirm the French 500 config page, then revert) NOT run — it temporarily breaks the live site. Gate logic proven by local predicate simulation + code review + good-config live pass. Run only if explicitly desired.
 
 ## Resolved (this session)
 - Aiven DB power-off (free-tier inactivity): RESOLVED — operator powered it back on. Keep-alive (.github/workflows/keepalive.yml pings /health every 10 min) prevents recurrence.
