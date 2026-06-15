@@ -61,18 +61,78 @@ if (parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) === '/health') {
     exit;
 }
 
+// ---- HTTPS detection (D-01) -----------------------------------------------
+// Primary: Vercel's proxy sets x-forwarded-proto=https on all production HTTPS
+// requests. PHP maps it to $_SERVER['HTTP_X_FORWARDED_PROTO'].
+// Absent on local Docker plain-HTTP (no proxy layer).
+//
+// Fallback: $_SERVER['HTTPS'] is hardcoded 'On' in vercel-php CGI for all
+// Vercel requests regardless of actual TLS (cgi.ts source). On local Docker
+// Apache it is absent for plain-HTTP. Safe as secondary signal.
+$isHttps = (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https')
+         || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== '' && strtolower($_SERVER['HTTPS']) !== 'off');
+
+// ---- Production boot safety gate (SEC-04) ----------------------------------
+// Runs only on HTTPS (i.e. Vercel/production). Never fires on local HTTP dev.
+// Placed AFTER the /health early-return (keep-alive is always exempt — D-04)
+// and BEFORE Auth::start() so a misconfigured SESSION_SECURE never reaches the
+// session/cookie layer.
+if ($isHttps) {
+    $bootErrors = [];
+    if (Env::get('SESSION_SECURE', '0') !== '1') {
+        $bootErrors[] = 'SESSION_SECURE not set to 1';
+    }
+    $dbPassword = Env::get('DB_PASSWORD', '');
+    if ($dbPassword === '' || $dbPassword === 'reselltrack') {
+        $bootErrors[] = 'DB_PASSWORD is empty or uses dev default';
+    }
+    foreach (['DB_HOST', 'DB_NAME', 'DB_USER'] as $key) {
+        if (Env::get($key, '') === '') {
+            $bootErrors[] = $key . ' is empty';
+        }
+    }
+    foreach (['CLOUDINARY_CLOUD_NAME', 'CLOUDINARY_API_KEY', 'CLOUDINARY_API_SECRET'] as $key) {
+        if (Env::get($key, '') === '') {
+            $bootErrors[] = $key . ' is empty';
+        }
+    }
+    if ($bootErrors !== []) {
+        http_response_code(500);
+        header('Content-Type: text/html; charset=utf-8'); // Security-headers block has not run yet
+        foreach ($bootErrors as $reason) {
+            error_log('Boot gate: ' . $reason);
+        }
+        echo '<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8">'
+           . '<title>Erreur de configuration</title></head><body>'
+           . '<h1>Service temporairement indisponible</h1>'
+           . '<p>Une erreur de configuration empêche le démarrage de l\'application. '
+           . 'Veuillez contacter l\'administrateur.</p>'
+           . '</body></html>';
+        exit;
+    }
+}
+
 Auth::start();
 
 // ---- Security headers -------------------------------------------------------
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: DENY');
 header('Referrer-Policy: strict-origin-when-cross-origin');
+if ($isHttps) {
+    // Vercel's edge already emits a stronger platform-level Strict-Transport-Security header
+    // (max-age=63072000; includeSubDomains — 2 years, confirmed live curl 2026-06-15).
+    // This app-level header (1 year, includeSubDomains) is intentional defense-in-depth:
+    // it documents the app's TLS posture in code and protects it if the hosting platform changes.
+    // RFC 6797 §8.1: browsers process only the first STS header — no conflict, no harm.
+    // Not submitted to HSTS-submit lists (we don't control the vercel.app apex domain).
+    header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
+}
 header(
     "Content-Security-Policy: default-src 'self'; "
     . "script-src 'self' cdn.jsdelivr.net; "
     . "style-src 'self' 'unsafe-inline' cdn.jsdelivr.net fonts.googleapis.com; "
     . "font-src fonts.gstatic.com cdn.jsdelivr.net; "
-    . "img-src 'self' data: https://res.cloudinary.com; " // Cloudinary image delivery (STORE-02); pre-satisfies part of Phase 5 SEC-03
+    . "img-src 'self' data: https://res.cloudinary.com; " // Cloudinary image delivery (SEC-03)
     . "connect-src 'self' api.frankfurter.app"
 );
 
