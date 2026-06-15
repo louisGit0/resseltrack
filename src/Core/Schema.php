@@ -93,6 +93,41 @@ final class Schema
                         REFERENCES orders (id) ON DELETE CASCADE'
             );
         }
+
+        // Suppliers: per-user supplier directory (name, url, rating, comment).
+        // Created BEFORE the orders.supplier_id FK so the FK target exists even
+        // when Schema::ensure() runs standalone on an existing volume.
+        $db->exec(
+            'CREATE TABLE IF NOT EXISTS suppliers (
+                id         INT UNSIGNED NOT NULL AUTO_INCREMENT,
+                user_id    INT UNSIGNED NOT NULL,
+                name       VARCHAR(150) NOT NULL,
+                url        VARCHAR(500) NULL,
+                rating     TINYINT UNSIGNED NULL,
+                comment    TEXT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                PRIMARY KEY (id),
+                KEY idx_suppliers_user (user_id),
+                CONSTRAINT fk_suppliers_user FOREIGN KEY (user_id)
+                    REFERENCES users (id) ON DELETE CASCADE
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci'
+        );
+
+        // Orders: optional, nullable FK to a saved supplier. Added via a guarded
+        // ALTER (the schema.sql CREATE TABLE IF NOT EXISTS orders block is a no-op
+        // on the live table). ON DELETE SET NULL unlinks orders when a supplier is
+        // deleted (D-08) — the free-text orders.supplier column is preserved.
+        $hasSupplierId = $db->query("SHOW COLUMNS FROM orders LIKE 'supplier_id'")->fetch();
+        if (!$hasSupplierId) {
+            $db->exec('ALTER TABLE orders ADD COLUMN supplier_id INT UNSIGNED NULL AFTER user_id');
+            $db->exec(
+                'ALTER TABLE orders
+                    ADD KEY idx_orders_supplier (supplier_id),
+                    ADD CONSTRAINT fk_orders_supplier FOREIGN KEY (supplier_id)
+                        REFERENCES suppliers (id) ON DELETE SET NULL'
+            );
+        }
     }
 
     /** Widen the currency ENUM to include CNY on existing volumes. */
