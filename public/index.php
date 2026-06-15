@@ -20,6 +20,11 @@ use App\Controllers\ExportController;
 
 $root = dirname(__DIR__);
 
+// Composer vendor autoload — absent in local dev without `composer install`, present on Vercel Lambda
+if (is_file($root . '/vendor/autoload.php')) {
+    require $root . '/vendor/autoload.php';
+}
+
 // ---- PSR-4-ish autoloader: App\Foo\Bar -> src/Foo/Bar.php -----------------
 spl_autoload_register(static function (string $class) use ($root): void {
     $prefix = 'App\\';
@@ -48,7 +53,7 @@ header(
     . "script-src 'self' cdn.jsdelivr.net; "
     . "style-src 'self' 'unsafe-inline' cdn.jsdelivr.net fonts.googleapis.com; "
     . "font-src fonts.gstatic.com cdn.jsdelivr.net; "
-    . "img-src 'self' data:; "
+    . "img-src 'self' data: https://*.r2.dev; " // pre-satisfies Phase 5 SEC-03 for STORE-02
     . "connect-src 'self' api.frankfurter.app"
 );
 
