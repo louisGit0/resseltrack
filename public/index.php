@@ -42,6 +42,25 @@ require $root . '/src/helpers.php';
 
 // ---- Environment & session ------------------------------------------------
 Env::load($root . '/.env');
+
+// ---- Health check / keep-alive --------------------------------------------
+// Handled BEFORE Auth::start() so it neither starts a session (no anon rows)
+// nor requires auth. The SELECT 1 forces a real MySQL connection, which keeps
+// the Aiven free-tier service from powering off due to inactivity. Pinged on a
+// schedule by .github/workflows/keepalive.yml.
+if (parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) === '/health') {
+    header('Content-Type: application/json');
+    try {
+        \App\Core\Database::connection()->query('SELECT 1');
+        echo '{"status":"ok","db":"up"}';
+    } catch (\Throwable $e) {
+        http_response_code(503);
+        error_log('Health check DB failure: ' . $e->getMessage());
+        echo '{"status":"error","db":"down"}';
+    }
+    exit;
+}
+
 Auth::start();
 
 // ---- Security headers -------------------------------------------------------

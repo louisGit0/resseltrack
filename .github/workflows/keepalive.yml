@@ -1,0 +1,32 @@
+name: keep-alive
+
+# Pings the /health endpoint on a schedule so the Aiven free-tier MySQL
+# service stays active (it powers off after inactivity). /health does a real
+# SELECT 1, generating a DB connection on every ping.
+
+on:
+  schedule:
+    # Every 10 minutes (GitHub may delay scheduled runs under load — fine for keep-alive).
+    - cron: "*/10 * * * *"
+  workflow_dispatch: {} # allow manual run from the Actions tab
+
+permissions:
+  contents: read
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping /health
+        run: |
+          URL="https://resseltrack-nu.vercel.app/health"
+          code=$(curl -s -o /tmp/health.json -w "%{http_code}" --max-time 30 "$URL" || echo "000")
+          echo "GET $URL -> HTTP $code"
+          echo "Body: $(cat /tmp/health.json 2>/dev/null)"
+          # Do not fail the job on a non-200: the goal is to generate DB activity,
+          # and a transient blip should not spam failure notifications. Surface status only.
+          if [ "$code" = "200" ]; then
+            echo "DB is awake."
+          else
+            echo "::warning::Health check returned HTTP $code (DB may be powered off or waking)."
+          fi
