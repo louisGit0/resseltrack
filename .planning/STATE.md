@@ -1,17 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: complete
-stopped_at: "Milestone v1.0 COMPLETE — all 7 phases done, VERIF-01 passed live"
-last_updated: "2026-06-15T14:05:00Z"
-last_activity: 2026-06-15 -- Phase 7 complete; VERIF-01 PASS (every feature verified live); milestone v1.0 done
+milestone: v2.0
+milestone_name: Suppliers, ratings & auto-fill
+status: planning
+last_updated: "2026-06-15T17:34:27.660Z"
+last_activity: 2026-06-15
 progress:
-  total_phases: 7
-  completed_phases: 7
-  total_plans: 11
-  completed_plans: 11
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -25,12 +24,13 @@ See: .planning/PROJECT.md (updated 2026-06-12)
 
 ## Current Position
 
-ALL 7 phases COMPLETE. VERIF-01 passed live (07-VERIFICATION.md). Milestone v1.0 done.
-Live: https://resseltrack-nu.vercel.app — routing+CDN, Aiven MySQL/TLS, persistent sessions, Cloudinary images, HSTS+boot-gate, N+1 fixed + FX reliable. Production DB pristine (test data cleaned).
-
-Progress: [██████████] 100% (7/7 phases, all requirements Done)
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-06-15 — Milestone v2.0 started
 
 ## Possible next steps (post-v1.0, optional)
+
 - Spawned task: purge Cloudinary images on product delete.
 - OrderController FX fallback parity (P6 D-06 gap).
 - Deferred v2 backlog: custom domain, ProxySQL, /health connection-count, graceful 503, CSRF rotation, rate limiting on /register & /export.

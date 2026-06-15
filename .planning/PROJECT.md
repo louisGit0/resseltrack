@@ -4,11 +4,21 @@
 
 ResellTrack est une plateforme multi-utilisateurs de **suivi d'achat-revente avec calcul de rentabilité** : achat en lots (souvent AliExpress, en USD avec port et douane) revendus à l'unité (Vinted & co). PHP 8.3 + MySQL 8, architecture MVC maison sans framework, conteneurisée avec Docker.
 
-Aujourd'hui l'application ne tourne qu'**en local**. L'objectif de ce jalon est de la rendre **accessible publiquement en ligne, déployée et pleinement fonctionnelle sur Vercel**.
+L'application est désormais **déployée et pleinement fonctionnelle sur Vercel** (milestone v1.0 livré : Aiven MySQL/TLS, sessions persistantes, images Cloudinary, sécurité de prod, vérification end-to-end). Le jalon courant (v2.0) ajoute des fonctionnalités produit.
 
 ## Core Value
 
 Tout ce qui fonctionne en local doit fonctionner **à l'identique une fois déployé sur Vercel** — le site en ligne est pleinement opérationnel pour de vrais utilisateurs (connexion qui persiste, images qui s'affichent, données qui se sauvegardent).
+
+## Current Milestone: v2.0 — Fournisseurs, notation produit & auto-remplissage
+
+**Goal:** Enrichir le suivi achat-revente : gérer ses fournisseurs (notés), noter les produits reçus, et accélérer la saisie via l'import d'une page produit publique.
+
+**Target features:**
+- **Fournisseurs** : onglet dédié + CRUD (nom, URL, note 1-5, commentaire) ; lien optionnel depuis les commandes (champ `supplier` libre → menu déroulant).
+- **Notation produit** : note (1-5) + commentaire, éditable après réception, affichée en liste/fiche produit.
+- **Auto-remplissage best-effort** : coller une URL de **produit public** → scrape serveur (curl + parsing) pré-remplit titre/prix/image ; repli manuel ; site par site (cible initiale AliExpress). Scraping de pages de **commande privées** = hors périmètre.
+- **Nettoyage** : la suppression d'un produit purge ses objets Cloudinary (dette de v1.0).
 
 ## Requirements
 
@@ -27,14 +37,25 @@ Tout ce qui fonctionne en local doit fonctionner **à l'identique une fois dépl
 
 ### Active
 
-<!-- Périmètre de ce jalon : rendre le déploiement Vercel fonctionnel. -->
+<!-- Périmètre du jalon v2.0 : fonctionnalités fournisseurs / notation / auto-remplissage. -->
 
-- [ ] Routing serverless Vercel (`vercel.json` + runtime PHP communautaire) redirigeant vers le front controller
-- [ ] Base MySQL 8 managée externe (**Aiven for MySQL**) + connexion TLS (certificat CA committé) + chargement du schéma
-- [ ] Sessions persistantes via stockage en base MySQL (les sessions fichiers ne survivent pas au serverless)
-- [ ] Upload d'images migré vers un stockage objet (**Cloudflare R2** via `aws/aws-sdk-php`) au lieu du disque local éphémère
-- [ ] Configuration de production (secrets en variables d'environnement Vercel, `SESSION_SECURE=1`, HSTS, migration du schéma en one-shot hors chemin par-requête)
-- [ ] Vérification end-to-end de chaque fonctionnalité existante une fois déployée en production
+- [ ] Onglet **Fournisseurs** : CRUD (nom, URL, note 1-5, commentaire) scopé par utilisateur
+- [ ] Lien optionnel des commandes vers un fournisseur (champ `supplier` libre → menu déroulant, rétrocompatible)
+- [ ] **Notation produit** (note 1-5 + commentaire), éditable après réception, affichée en liste/fiche
+- [ ] **Auto-remplissage best-effort** depuis une URL de produit public (scrape serveur titre/prix/image, repli manuel)
+- [ ] Purge des images Cloudinary à la suppression d'un produit (dette v1.0)
+
+### Shipped — v1.0 (déploiement Vercel)
+
+<!-- Livré et vérifié en production le 2026-06-15. -->
+
+- ✓ Routing serverless Vercel + assets CDN ; dev Docker préservé (DEPLOY-01/02/03)
+- ✓ Aiven MySQL 8 en TLS + migration one-shot `bin/migrate.php` (DB-01/02/03)
+- ✓ Sessions persistantes MySQL + cookie Secure/HttpOnly/SameSite + CSRF (SESS-01..04)
+- ✓ Images sur **Cloudinary** (pivot depuis R2) + garde 3,5 Mo (STORE-01..05)
+- ✓ HSTS + garde de boot prod + secrets hors dépôt (SEC-01..04)
+- ✓ N+1 corrigé + `ExchangeRateService` durci (frankfurter.dev) (PERF-01/02)
+- ✓ Vérification end-to-end live (VERIF-01)
 
 ### Out of Scope
 
