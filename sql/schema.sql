@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS orders (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
--- Suppliers (per-user supplier directory; orders may link to one)
+-- Suppliers (per-user supplier directory — orders may link to one)
 -- The orders FK to this table is added by Schema::ensure() (guarded ALTER),
 -- NOT here — adding it to the orders block above would be a no-op on the
 -- live table. Fresh volumes get suppliers from this block.
