@@ -199,7 +199,7 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2)*
 
-- [ ] 08-04-PLAN.md — SUP-01 UI: suppliers index table + create/edit form + reusable clickable star-rating widget (app.js/style.css)
+- [x] 08-04-PLAN.md — SUP-01 UI: suppliers index table + create/edit form + reusable clickable star-rating widget (app.js/style.css)
 
 **Wave 4** *(blocked on Wave 3)*
 
@@ -259,6 +259,6 @@ v1.0 phases (1-7) complete. v2.0 executes in numeric order: 8 → 9 → 10
 | 5. Security Hardening and Production Configuration | 1/1 | Complete | 2026-06-15 |
 | 6. Performance and Reliability | 1/1 | Complete   | 2026-06-15 |
 | 7. Production Verification | 1/1 | Complete | 2026-06-15 |
-| 8. Suppliers and Product Cleanup | 3/6 | In Progress|  |
+| 8. Suppliers and Product Cleanup | 4/6 | In Progress|  |
 | 9. Product Ratings | 0/TBD | Not started | - |
 | 10. Product URL Auto-fill | 0/TBD | Not started | - |
