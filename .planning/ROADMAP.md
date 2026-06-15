@@ -142,7 +142,11 @@ Plans:
   2. A purchase recorded in USD saves the correct EUR cost (not `0.00`) when frankfurter.app responds normally
   3. When frankfurter.app is unreachable or returns an error, the purchase form shows a user-visible warning — no silent `0.00` write to the database
 
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+**Wave 1**
+
+- [ ] 06-01-PLAN.md — Replace the N+1 in SaleController::productsMeta() with 3 fixed queries (new Purchase::lotsForUser + Sale::soldQtyByProduct, PHP grouping, ProfitCalculator unchanged); rewrite ExchangeRateService::latest() to curl (5s timeout + logging); add server-side FX fallback + block-on-failure in PurchaseController::validate() + identity unit test. Single autonomous plan — no operator/Wave-2 step (live smoke checks folded into verification for the orchestrator).
 
 ### Phase 7: Production Verification
 
@@ -171,5 +175,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 3. Persistent Sessions | 2/2 | Complete | 2026-06-12 |
 | 4. Image Storage (Cloudinary) | 2/2 | Complete | 2026-06-15 |
 | 5. Security Hardening and Production Configuration | 1/1 | Complete | 2026-06-15 |
-| 6. Performance and Reliability | 0/? | Not started | - |
+| 6. Performance and Reliability | 0/1 | Planned | - |
 | 7. Production Verification | 0/? | Not started | - |
