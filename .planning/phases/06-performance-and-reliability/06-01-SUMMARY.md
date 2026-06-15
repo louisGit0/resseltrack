@@ -145,3 +145,19 @@ All 4 commits verified:
 - f806a16: test(06-01): ExchangeRateServiceTest RED gate
 - 7b8f2e7: feat(06-01): PERF-02 service curl rewrite
 - d4666af: feat(06-01): PERF-02 controller fallback+block
+
+---
+
+## Live verification (orchestrator, 2026-06-15, commit f176950)
+
+| Req | Result |
+|-----|--------|
+| PERF-01 | PASS — `/sales/create` renders (HTTP 200); productsMeta() now issues 3 fixed queries regardless of catalog size; 27/27 phpunit green (ProfitCalculator unchanged) |
+| PERF-02 (valid rate) | PASS — USD purchase, rate 0.92 → `unit_cost_eur = 9.2000` (correct, not 0.00) |
+| PERF-02 (server fallback) | PASS — USD purchase with EMPTY rate → server fetched 0.864530 from frankfurter.dev → `unit_cost_eur = 8.6453` (never 0.00) |
+| PERF-02 (API unreachable) | PASS — before the endpoint fix, frankfurter returned 301 → fallback null → submission BLOCKED (no row written, no silent 0.00) |
+
+### Reliability fix found during verification (commit f176950)
+`api.frankfurter.app` was retired (returns 301 via Cloudflare); the API moved to `api.frankfurter.dev/v1`. This had silently broken both the server fallback (curl doesn't follow the 301 → null) and the client-side "Taux du jour" button. Fixed all 3 touchpoints — `ExchangeRateService` endpoint, `public/assets/js/app.js` (×2), and the CSP `connect-src` — to `api.frankfurter.dev/v1/latest` (same `from`/`to` params, same `rates.EUR` response). Verified: server fallback now fetches a live rate.
+
+Test data cleaned; production DB pristine. **Phase 6 COMPLETE.**

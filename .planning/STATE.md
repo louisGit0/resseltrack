@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Completed 05-01-PLAN.md (isHttps detection + boot safety gate + HSTS + SEC-01/03 audit — Task 1 committed 772fa54, Task 2 audit-only, unpushed)
-last_updated: "2026-06-15T12:34:44.998Z"
-last_activity: 2026-06-15
+status: executing
+stopped_at: "Phase 6 complete — N+1 fixed, ExchangeRateService hardened + FX endpoint fixed (frankfurter.dev); PERF-01/02 verified live"
+last_updated: "2026-06-15T12:55:00Z"
+last_activity: 2026-06-15 -- Phase 6 complete; PERF-01/02 verified live (USD fallback fetches real rate → correct EUR cost, never 0.00)
 progress:
   total_phases: 7
   completed_phases: 6
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-12)
 
 **Core value:** Tout ce qui fonctionne en local fonctionne à l'identique une fois déployé sur Vercel — le site en ligne est pleinement opérationnel pour de vrais utilisateurs.
-**Current focus:** Phase 6 — Performance & Reliability (next)
+**Current focus:** Phase 7 — Production Verification (final phase, next)
 
 ## Current Position
 
-Phase: 5 of 7 COMPLETE (Security Hardening and Production Configuration) → next: Phase 6
-Plan: 1 of 1 in Phase 5 (complete + verified live)
-Status: Phase complete — ready for verification
+Phase: 6 of 7 COMPLETE (Performance and Reliability) → next: Phase 7 (final)
+Plan: 1 of 1 in Phase 6 (complete + verified live)
+Status: Phase 6 done. N+1 in productsMeta() replaced by 3 fixed queries (ProfitCalculator unchanged). ExchangeRateService curl-hardened; server-side FX fallback works (fetched 0.8645 → unit_cost_eur 8.6453, never 0.00); FX endpoint fixed app→dev (frankfurter.app was retired/301). PERF-01/02 verified live.
 Last activity: 2026-06-15
 
-Progress: [██████████] 100%
+Progress: [████████░░] 86% (6/7 phases)
 
 ## Optional follow-up
 
@@ -104,9 +104,10 @@ Recent decisions affecting current work:
 - 05-01: Boot gate placed after /health early-return and before Auth::start() — keep-alive always responds (D-04)
 - 05-01: App-level HSTS max-age=31536000; includeSubDomains, no preload-list submission — Vercel platform already emits 2-year HSTS; app header is defense-in-depth (D-02)
 - 05-01: Boot gate error page is generic French HTML; specific reason goes to error_log only — no config state leaked to HTTP (RESEARCH Pitfall 4)
-- [Phase ?]: batch fetch + PHP grouping
-- [Phase ?]: null on all failure paths, 4 error_log sites
-- [Phase ?]: blocks before unitCostEur on null fallback
+- 06-01: productsMeta() N+1 → 3 fixed queries (Purchase::lotsForUser + Sale::soldQtyByProduct, grouped in PHP); ProfitCalculator::cump/stock unchanged
+- 06-01: ExchangeRateService rewritten to curl (5s timeout, !==200, null on all failure paths, error_log each)
+- 06-01: PurchaseController validate() server-side FX fallback + block before unitCostEur on null (no silent 0.00); covers store()+update()
+- 06-01 (fix): FX API endpoint api.frankfurter.app → api.frankfurter.dev/v1 (the .app domain was retired → 301); fixed in ExchangeRateService, app.js (x2), CSP connect-src
 
 ### Pending Todos
 
