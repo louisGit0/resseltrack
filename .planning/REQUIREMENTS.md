@@ -71,7 +71,7 @@ Fonctionnalités produit ajoutées dans le jalon v2.0. Chacune sera mappée à u
 
 ### Nettoyage (dette v1.0)
 
-- [ ] **OPS-06**: La suppression d'un produit **purge ses objets Cloudinary** (cover + galerie), best-effort avec log — comme `deleteImage()` le fait déjà pour une photo
+- [x] **OPS-06**: La suppression d'un produit **purge ses objets Cloudinary** (cover + galerie), best-effort avec log — comme `deleteImage()` le fait déjà pour une photo
 
 ## v2 Requirements
 
@@ -133,7 +133,7 @@ Quelles phases couvrent quels requirements.
 | VERIF-01 | Phase 7 | Done |
 | SUP-01 | Phase 8 | Pending |
 | SUP-02 | Phase 8 | Pending |
-| OPS-06 | Phase 8 | Pending |
+| OPS-06 | Phase 8 | Complete |
 | RATE-01 | Phase 9 | Pending |
 | IMPORT-01 | Phase 10 | Pending |
 
