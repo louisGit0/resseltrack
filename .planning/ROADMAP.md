@@ -125,7 +125,11 @@ Plans:
   3. No `.env` file, hardcoded credential, or secret appears in the Vercel build output or committed codebase
   4. Product images from R2 load without any CSP violation in the browser console
 
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+**Wave 1**
+
+- [ ] 05-01-PLAN.md — Add HTTPS detection + production boot safety gate (SEC-04) + HSTS header (SEC-02) to public/index.php; verify SEC-01 (no committed secret) and SEC-03 (CSP covers Cloudinary). Single autonomous plan — no operator/Wave-2 step (HTTPS detection avoids needing APP_ENV).
 
 ### Phase 6: Performance and Reliability
 
