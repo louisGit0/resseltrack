@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-stopped_at: Completed 03-01-PLAN.md (DatabaseSessionHandler + sessions DDL + Auth wiring — all 3 tasks committed, unpushed)
-last_updated: "2026-06-15T07:06:04.698Z"
-last_activity: 2026-06-15
+status: executing
+stopped_at: "Phase 4 Wave 1 deployed (R2 code + composer.lock fix + /health keep-alive); BLOCKED on operator powering Aiven back on"
+last_updated: "2026-06-15T07:25:00.000Z"
+last_activity: 2026-06-15 -- Phase 4 04-01 code live; Aiven free-tier powered off (DNS unresolved) — awaiting operator Power on; keep-alive added to prevent recurrence
 progress:
   total_phases: 7
   completed_phases: 3
@@ -21,16 +21,19 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-12)
 
 **Core value:** Tout ce qui fonctionne en local fonctionne à l'identique une fois déployé sur Vercel — le site en ligne est pleinement opérationnel pour de vrais utilisateurs.
-**Current focus:** Phase 4 — Image Storage on Cloudflare R2 (next)
+**Current focus:** Phase 4 — Image Storage on R2 (Wave 1 code deployed; blocked on Aiven power-on, then Wave 2 = R2 bucket)
 
 ## Current Position
 
-Phase: 4 of 7 IN PROGRESS (Image Storage on R2) → Plan 01 complete, Plan 02 (operator) pending
-Plan: 1 of 2 in Phase 4 complete (code half done; 04-02 operator half next)
-Status: Plan 04-01 complete — ready for operator setup (04-02)
+Phase: 4 of 7 IN PROGRESS (Image Storage on R2) → Plan 04-01 code live; Plan 04-02 (operator R2 setup) pending
+Plan: 1 of 2 in Phase 4 (04-01 deployed)
+Status: 04-01 R2 code deployed (build green after composer.lock fix). /health + GitHub Actions keep-alive added. BLOCKED: Aiven free-tier DB powered off (DNS unresolved) — operator must Power on at console.aiven.io; then verify site + proceed to 04-02 (R2 bucket).
 Last activity: 2026-06-15
 
-Progress: [█████████░] 88%
+Progress: [████░░░░░░] 43% (3/7 phases)
+
+## Active blocker
+- Aiven free-tier MySQL `resseltrack` powered off after ~3 days inactivity (DNS no longer resolves → site 500 "Database connection failed"). Operator chose to Power on via console. Keep-alive (/health pinged every 10 min by .github/workflows/keepalive.yml) now in place to prevent recurrence once back up. NOT a code regression — Phase 4 code/build are healthy.
 
 ## Resolved follow-ups
 
@@ -100,7 +103,7 @@ Items acknowledged and carried forward from research:
 
 | Category | Item | Status | Deferred At |
 |----------|------|--------|-------------|
-| v2 / OPS | Health endpoint `/health` (DB status + connection count) | Deferred | Init |
+| v2 / OPS | Health endpoint `/health` (DB status) | DONE 2026-06-15 (pulled forward for keep-alive; connection-count metric still deferred) | Init |
 | v2 / OPS | Graceful 503 page on DB failure | Deferred | Init |
 | v2 / OPS | Preview deploy DB isolation (`VERCEL_ENV`) | Deferred | Init |
 | v2 / OPS | ProxySQL pooler if Aiven connection ceiling hit | Deferred | Init |
