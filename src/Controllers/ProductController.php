@@ -11,6 +11,7 @@ use App\Models\ProductImage;
 use App\Models\Purchase;
 use App\Models\Sale;
 use App\Services\ProfitCalculator;
+use App\Services\R2Storage;
 
 final class ProductController extends Controller
 {
@@ -372,9 +373,11 @@ final class ProductController extends Controller
 
         $imageModel->delete((int) $image['id'], $userId);
 
-        $file = dirname(__DIR__, 2) . '/public' . $image['path'];
-        if (is_file($file)) {
-            @unlink($file);
+        try {
+            (new R2Storage())->delete((string) $image['path']);
+        } catch (\Throwable $e) {
+            error_log('R2 delete failed for path ' . $image['path'] . ': ' . $e->getMessage());
+            // best-effort: continue, the DB row is already gone
         }
 
         $product = $this->products->find($pid, $userId);
@@ -443,7 +446,7 @@ final class ProductController extends Controller
         ];
     }
 
-    private const MAX_UPLOAD_BYTES = 2 * 1024 * 1024; // 2 Mo
+    private const MAX_UPLOAD_BYTES = 3670016; // (int)(3.5 * 1024 * 1024) ~3,5 Mo (STORE-05; PHP class-const cannot use cast expressions)
     private const MAX_GALLERY_PHOTOS = 10;
 
     /** Cover upload from the product form. Returns web path or null. */
@@ -463,13 +466,13 @@ final class ProductController extends Controller
     }
 
     /**
-     * Validate (size + real MIME) and move one uploaded file.
-     * @return array{0: ?string, 1: ?string} [web path, error message]
+     * Validate (size + real MIME) and store one uploaded file on Cloudflare R2.
+     * @return array{0: ?string, 1: ?string} [full R2 URL, error message]
      */
     private function storeUploadedFile(string $tmp, int $size): array
     {
         if ($size > self::MAX_UPLOAD_BYTES) {
-            return [null, 'elle dépasse la taille maximale de 2 Mo.'];
+            return [null, 'elle dépasse la taille maximale autorisée (~3,5 Mo).'];
         }
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mime = finfo_file($finfo, $tmp);
@@ -479,11 +482,13 @@ final class ProductController extends Controller
         if (!isset($allowed[$mime])) {
             return [null, 'format non supporté (JPEG, PNG, WebP ou GIF attendu).'];
         }
-        $name = bin2hex(random_bytes(8)) . '.' . $allowed[$mime];
-        $dest = dirname(__DIR__, 2) . '/public/assets/uploads/' . $name;
-        if (!move_uploaded_file($tmp, $dest)) {
+        $key = bin2hex(random_bytes(8)) . '.' . $allowed[$mime];
+        try {
+            $url = (new R2Storage())->put($tmp, $key, (string) $mime);
+        } catch (\Throwable $e) {
+            error_log('R2 put failed: ' . $e->getMessage());
             return [null, 'échec de l\'enregistrement du fichier.'];
         }
-        return ['/assets/uploads/' . $name, null];
+        return [$url, null];
     }
 }
