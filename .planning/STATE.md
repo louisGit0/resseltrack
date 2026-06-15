@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Suppliers, ratings & auto-fill
 status: executing
-stopped_at: Phase 8 context gathered
-last_updated: "2026-06-15T19:25:52.411Z"
+stopped_at: Completed 08-03-PLAN.md
+last_updated: "2026-06-15T19:32:31.919Z"
 last_activity: 2026-06-15
 progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 6
-  completed_plans: 2
-  percent: 33
+  completed_plans: 3
+  percent: 50
 ---
 
 # Project State
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-06-12)
 ## Current Position
 
 Phase: 08 (suppliers-and-product-cleanup) — EXECUTING
-Plan: 3 of 6
+Plan: 4 of 6
 Status: Ready to execute
 Last activity: 2026-06-15
 
@@ -82,6 +82,7 @@ Last activity: 2026-06-15
 | Phase 06-performance-and-reliability P01 | 15m | 3 tasks | 6 files |
 | Phase 08-suppliers-and-product-cleanup P01 | 3m | 2 tasks | 2 files |
 | Phase 08 P02 | 4m | 1 tasks | 1 files |
+| Phase 08 P03 | 3min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -116,6 +117,9 @@ Recent decisions affecting current work:
 - 06-01 (fix): FX API endpoint api.frankfurter.app → api.frankfurter.dev/v1 (the .app domain was retired → 301); fixed in ExchangeRateService, app.js (x2), CSP connect-src
 - [Phase 08]: 08-01: orders.supplier_id added only via guarded Schema::ensure() ALTER (ON DELETE SET NULL, D-03/D-08), never in schema.sql orders block; suppliers table mirrors the fk_purchases_order idempotency pattern
 - [Phase 08]: 08-02: ProductController::destroy() collects cover+gallery Cloudinary paths BEFORE Product::delete() (CASCADE wipes product_images), dedupes via array_unique, then purges best-effort in try/catch over Throwable + error_log — never blocks the DB delete (D-11/OPS-06)
+- [Phase ?]: [Phase 08]: 08-03: Supplier model mirrors Order.php (LEFT JOIN orders COUNT(o.id) AS orders_count GROUP BY for D-07; :uid-scoped; find() returns null when not owned; delete() plain DELETE — FK ON DELETE SET NULL handles unlink per D-08)
+- [Phase ?]: [Phase 08]: 08-03: SupplierController clones ProductController CRUD (Auth::require() ctor; Csrf::validate() first line of every POST; ownership-or-redirect on edit/update; validate() enforces name required + rating in {null,1..5}); no show action / no GET /suppliers/{id} (D-09 table-only); URL stored trimmed/null without filter_var (matches order_url convention)
+- [Phase ?]: [Phase 08]: 08-03: SUP-01 backend only — model/controller/6 routes (create before {id}/edit)/Fournisseurs nav (bi-truck, single navHtml line covers sidebar+offcanvas, D-10). Views land in 08-04; SUP-01 requirement NOT marked complete until 08-04
 
 ### Pending Todos
 
@@ -142,6 +146,6 @@ Items acknowledged and carried forward from research:
 
 ## Session Continuity
 
-Last session: 2026-06-15T19:23:27.185Z
+Last session: 2026-06-15T19:31:36.235Z
 Stopped at: Phase 8 context gathered
 Resume file: None
