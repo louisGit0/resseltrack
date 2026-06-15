@@ -63,12 +63,19 @@ final class CloudinaryStorage
             return;
         }
         $timestamp = (string) time();
-        $signature = $this->sign(['public_id' => $publicId, 'timestamp' => $timestamp]);
+        // invalidate=true also purges the CDN cache, so the delivery URL stops
+        // serving the (now-deleted) asset instead of returning a cached copy.
+        $signature = $this->sign([
+            'invalidate' => 'true',
+            'public_id' => $publicId,
+            'timestamp' => $timestamp,
+        ]);
 
         $this->request($this->endpoint('destroy'), [
             'api_key' => $this->apiKey,
             'timestamp' => $timestamp,
             'public_id' => $publicId,
+            'invalidate' => 'true',
             'signature' => $signature,
         ]);
     }
