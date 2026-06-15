@@ -84,6 +84,27 @@ CREATE TABLE IF NOT EXISTS orders (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
+-- Suppliers (per-user supplier directory; orders may link to one)
+-- The orders FK to this table is added by Schema::ensure() (guarded ALTER),
+-- NOT here — adding it to the orders block above would be a no-op on the
+-- live table. Fresh volumes get suppliers from this block.
+-- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS suppliers (
+  id         INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id    INT UNSIGNED NOT NULL,
+  name       VARCHAR(150) NOT NULL,
+  url        VARCHAR(500) NULL,
+  rating     TINYINT UNSIGNED NULL,  -- 1..5, NULL = unrated
+  comment    TEXT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_suppliers_user (user_id),
+  CONSTRAINT fk_suppliers_user FOREIGN KEY (user_id)
+    REFERENCES users (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
 -- Purchases (one row = one lot, possibly a line of an order)
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS purchases (
