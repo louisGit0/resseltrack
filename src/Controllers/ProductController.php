@@ -295,7 +295,38 @@ final class ProductController extends Controller
     public function destroy(array $params): void
     {
         Csrf::validate();
-        $this->products->delete((int) $params['id'], Auth::id());
+        $userId = Auth::id();
+        $pid = (int) $params['id'];
+
+        // 1) Collect every Cloudinary path BEFORE the cascading delete wipes
+        //    product_images. The cover (products.image_path) is usually also a
+        //    gallery row, so dedupe to avoid a redundant destroy call.
+        $paths = [];
+        $product = $this->products->find($pid, $userId);
+        if ($product !== null && !empty($product['image_path'])) {
+            $paths[] = (string) $product['image_path']; // cover
+        }
+        foreach ((new ProductImage())->allForProduct($userId, $pid) as $img) {
+            $paths[] = (string) $img['path']; // gallery
+        }
+        $paths = array_values(array_unique(array_filter($paths)));
+
+        // 2) DB delete (FK CASCADE removes product_images, purchases, sales).
+        $this->products->delete($pid, $userId);
+
+        // 3) Best-effort Cloudinary purge — never blocks the DB delete (D-11).
+        //    Mirrors the deleteImage() try/catch; no-ops on legacy
+        //    /assets/uploads/... paths via CloudinaryStorage::derivePublicId().
+        $storage = new CloudinaryStorage();
+        foreach ($paths as $path) {
+            try {
+                $storage->delete($path);
+            } catch (\Throwable $e) {
+                error_log('Cloudinary delete failed for path ' . $path . ': ' . $e->getMessage());
+                // best-effort: continue, the DB rows are already gone
+            }
+        }
+
         $this->flash('success', 'Produit supprimé (avec ses achats et ventes liés).');
         $this->redirect('/products');
     }
