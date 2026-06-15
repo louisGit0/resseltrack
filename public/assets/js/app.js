@@ -68,7 +68,7 @@
                 if (from === 'EUR') return;
                 rateStatus.textContent = 'Chargement…';
                 try {
-                    const res = await fetch('https://api.frankfurter.app/latest?from=' + from + '&to=EUR');
+                    const res = await fetch('https://api.frankfurter.dev/v1/latest?from=' + from + '&to=EUR');
                     const data = await res.json();
                     const r = data && data.rates && data.rates.EUR;
                     if (r) {
@@ -372,7 +372,7 @@
                 if (from === 'EUR') return;
                 rateStatus.textContent = 'Chargement…';
                 try {
-                    const res = await fetch('https://api.frankfurter.app/latest?from=' + from + '&to=EUR');
+                    const res = await fetch('https://api.frankfurter.dev/v1/latest?from=' + from + '&to=EUR');
                     const data = await res.json();
                     const v = data && data.rates && data.rates.EUR;
                     if (v) {

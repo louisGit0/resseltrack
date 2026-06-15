@@ -133,7 +133,7 @@ header(
     . "style-src 'self' 'unsafe-inline' cdn.jsdelivr.net fonts.googleapis.com; "
     . "font-src fonts.gstatic.com cdn.jsdelivr.net; "
     . "img-src 'self' data: https://res.cloudinary.com; " // Cloudinary image delivery (SEC-03)
-    . "connect-src 'self' api.frankfurter.app"
+    . "connect-src 'self' api.frankfurter.dev"
 );
 
 // ---- Routes ---------------------------------------------------------------

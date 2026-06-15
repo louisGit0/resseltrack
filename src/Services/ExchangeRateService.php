@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 /**
- * Server-side helper for the frankfurter.app free FX API.
+ * Server-side helper for the frankfurter.dev free FX API.
  *
  * The purchase form fetches the rate client-side (JS button "Taux du jour"),
  * but this service is available as a fallback / for server use. The rate that
@@ -13,7 +13,8 @@ namespace App\Services;
  */
 final class ExchangeRateService
 {
-    private const ENDPOINT = 'https://api.frankfurter.app/latest';
+    // frankfurter.app was retired (301 → Cloudflare); the API now lives at api.frankfurter.dev/v1.
+    private const ENDPOINT = 'https://api.frankfurter.dev/v1/latest';
 
     /**
      * Latest conversion rate from $from to $to (e.g. USD -> EUR).
