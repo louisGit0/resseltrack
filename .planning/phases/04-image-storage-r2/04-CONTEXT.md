@@ -107,3 +107,20 @@ Requirements: **STORE-01** (upload → R2 + URL in DB), **STORE-02** (images dis
 
 *Phase: 4-Image Storage on Cloudflare R2*
 *Context gathered: 2026-06-12*
+
+---
+
+## AMENDMENT 2026-06-15 — Provider pivot: Cloudflare R2 → Cloudinary
+
+R2 (and Supabase) require a credit card or hit the Supabase free 2-project quota; the user wants a free, no-card option. **Cloudinary** chosen instead.
+
+Supersedes D-01, D-04, D-05, D-06 (storage specifics) and D-09 (operator R2 setup):
+- **A-01:** Drop `aws/aws-sdk-php` entirely (Cloudinary is NOT S3). `composer.lock` reverted to dev-only (phpunit). Lighter Lambda; no build-slimming concern.
+- **A-02:** New `final class App\Services\CloudinaryStorage` — signed Cloudinary REST API via plain `curl` (no SDK). `upload(tmp, publicId)` → POST `/image/upload`, returns `secure_url`. `delete(url)` → derive public_id, POST `/image/destroy`. Signature = `sha1(sorted "k=v&..." params + api_secret)` (SHA-1 default).
+- **A-03:** Store the full Cloudinary `secure_url` (`https://res.cloudinary.com/...`) in DB; views render unchanged. `public_id` = random hex (no extension); derived from the URL for deletes.
+- **A-04:** CSP `img-src` = `https://res.cloudinary.com` (replaces `*.r2.dev`).
+- **A-05:** Env vars: `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` (replace the 5 `R2_*`). Cloudinary delivery URLs are public by default — no "make public" step.
+- **Unchanged:** 3.5 MB guard + `api/php.ini` upload limits (D-07), best-effort delete (D-08), the `[?string,?string]` tuple contract, the guarded `vendor/autoload.php` require, and the `/health` keep-alive.
+- **Operator step (replaces D-09):** create a free Cloudinary account (no card), set the 3 `CLOUDINARY_*` vars in Vercel.
+
+Code deployed at commit 8adb47b (build READY). STORE-01..05 live verification pending the operator's Cloudinary credentials.

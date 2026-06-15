@@ -21,19 +21,23 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-12)
 
 **Core value:** Tout ce qui fonctionne en local fonctionne à l'identique une fois déployé sur Vercel — le site en ligne est pleinement opérationnel pour de vrais utilisateurs.
-**Current focus:** Phase 4 — Image Storage on R2 (Wave 1 code deployed; blocked on Aiven power-on, then Wave 2 = R2 bucket)
+**Current focus:** Phase 4 — Image Storage (pivoted R2 → Cloudinary; code deployed; pending operator Cloudinary account + 3 env vars)
 
 ## Current Position
 
-Phase: 4 of 7 IN PROGRESS (Image Storage on R2) → Plan 04-01 code live; Plan 04-02 (operator R2 setup) pending
-Plan: 1 of 2 in Phase 4 (04-01 deployed)
-Status: 04-01 R2 code deployed (build green after composer.lock fix). /health + GitHub Actions keep-alive added. BLOCKED: Aiven free-tier DB powered off (DNS unresolved) — operator must Power on at console.aiven.io; then verify site + proceed to 04-02 (R2 bucket).
+Phase: 4 of 7 IN PROGRESS (Image Storage → Cloudinary) → code live; pending Cloudinary creds + live STORE-01..05 verify
+Plan: 1 of 2 in Phase 4 (code deployed; operator setup + verify pending)
+Status: Image storage pivoted R2 → Cloudinary (R2/Supabase needed card or hit free quota). CloudinaryStorage (signed REST via curl, no SDK) deployed at 8adb47b, build green; /health 200, site healthy. PENDING: operator creates free Cloudinary account (no card) + sets CLOUDINARY_CLOUD_NAME/API_KEY/API_SECRET in Vercel; then I verify STORE-01..05 live.
 Last activity: 2026-06-15
 
 Progress: [████░░░░░░] 43% (3/7 phases)
 
 ## Active blocker
-- Aiven free-tier MySQL `resseltrack` powered off after ~3 days inactivity (DNS no longer resolves → site 500 "Database connection failed"). Operator chose to Power on via console. Keep-alive (/health pinged every 10 min by .github/workflows/keepalive.yml) now in place to prevent recurrence once back up. NOT a code regression — Phase 4 code/build are healthy.
+- Phase 4 image upload needs Cloudinary credentials: operator must create a free Cloudinary account (no card) and set CLOUDINARY_CLOUD_NAME / CLOUDINARY_API_KEY / CLOUDINARY_API_SECRET in Vercel (Production). Until then, normal pages work; only image upload fails (generic FR error). See 04-CONTEXT AMENDMENT 2026-06-15.
+
+## Resolved (this session)
+- Aiven DB power-off (free-tier inactivity): RESOLVED — operator powered it back on (DB up, /health 200). Keep-alive (.github/workflows/keepalive.yml pings /health every 10 min) now prevents recurrence.
+- composer.lock was missing → first composer-install build failed; generated + committed (now dev-only after dropping aws-sdk-php).
 
 ## Resolved follow-ups
 
