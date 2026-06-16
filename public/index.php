@@ -164,6 +164,7 @@ $router->post('/products', [ProductController::class, 'store']);
 $router->get('/products/{id}/edit', [ProductController::class, 'edit']);
 $router->post('/products/{id}', [ProductController::class, 'update']);
 $router->post('/products/{id}/delete', [ProductController::class, 'destroy']);
+$router->post('/products/{id}/rate', [ProductController::class, 'rate']); // quick inline rate (RATE-01, D-03)
 $router->post('/products/{id}/images', [ProductController::class, 'uploadImages']);
 $router->post('/products/{id}/images/{imageId}/delete', [ProductController::class, 'deleteImage']);
 $router->post('/products/{id}/images/{imageId}/cover', [ProductController::class, 'setCoverImage']);
