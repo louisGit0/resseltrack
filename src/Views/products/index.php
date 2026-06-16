@@ -132,6 +132,13 @@ $sortOptions = [
                     </a>
                     <div class="min-width-0 flex-grow-1">
                         <a href="/products/<?= $pid ?>" class="pcard-name d-block text-truncate"><?= e($p['name']) ?></a>
+                        <?php if ($p['rating'] !== null): $rating = (int) $p['rating']; ?>
+                            <span class="supplier-stars" title="<?= $rating ?>/5" aria-label="<?= $rating ?> sur 5" style="font-size:.8rem">
+                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                    <i class="bi <?= $i <= $rating ? 'bi-star-fill' : 'bi-star' ?>"></i>
+                                <?php endfor; ?>
+                            </span>
+                        <?php endif; ?>
                         <div class="d-flex flex-wrap gap-1 mt-1">
                             <?php if (!empty($p['category'])): ?>
                                 <span class="badge-soft badge-neutral"><?= e($p['category']) ?></span>
