@@ -438,6 +438,27 @@ final class ProductController extends Controller
         $this->redirect('/products/' . $pid);
     }
 
+    /** Quick inline rate from the product detail page (D-03): CSRF + ownership + rating-only update. */
+    public function rate(array $params): void
+    {
+        Csrf::validate();
+        $userId = Auth::id();
+        $pid = (int) $params['id'];
+        if ($this->products->find($pid, $userId) === null) { // ownership / IDOR guard
+            $this->flash('danger', 'Produit introuvable.');
+            $this->redirect('/products');
+        }
+        $raw = trim((string) ($_POST['rating'] ?? ''));
+        $rating = $raw === '' ? null : (int) $raw; // '' → clear to NULL
+        if ($rating !== null && ($rating < 1 || $rating > 5)) {
+            $this->flash('danger', 'La note doit être comprise entre 1 et 5.');
+            $this->redirect('/products/' . $pid);
+        }
+        $this->products->setRating($pid, $userId, $rating); // rating-only (D-02: comment edited via the form)
+        $this->flash('success', $rating === null ? 'Note retirée.' : 'Note enregistrée.');
+        $this->redirect('/products/' . $pid);
+    }
+
     /** @return array<string,mixed>|null */
     private function validate(): ?array
     {
@@ -448,6 +469,9 @@ final class ProductController extends Controller
         $rawUsed = trim((string) ($_POST['market_price_used'] ?? ''));
         $marketNew = $rawNew !== '' ? (float) str_replace(',', '.', $rawNew) : null;
         $marketUsed = $rawUsed !== '' ? (float) str_replace(',', '.', $rawUsed) : null;
+        $ratingNote = trim((string) ($_POST['rating_note'] ?? ''));
+        $rawRating = trim((string) ($_POST['rating'] ?? ''));
+        $rating = $rawRating === '' ? null : (int) $rawRating;
 
         $errors = [];
         if ($name === '') {
@@ -459,11 +483,15 @@ final class ProductController extends Controller
         if ($marketUsed !== null && $marketUsed < 0) {
             $errors['market_price_used'] = 'Le prix doit être positif ou nul.';
         }
+        if ($rating !== null && ($rating < 1 || $rating > 5)) {
+            $errors['rating'] = 'La note doit être comprise entre 1 et 5.';
+        }
 
         if ($errors !== []) {
             $this->flashErrors($errors, [
                 'name' => $name, 'category' => $category, 'description' => $description,
                 'market_price_new' => $rawNew, 'market_price_used' => $rawUsed,
+                'rating' => $rawRating, 'rating_note' => $ratingNote,
             ]);
             return null;
         }
@@ -474,6 +502,8 @@ final class ProductController extends Controller
             'description'       => $description,
             'market_price_new'  => $marketNew,
             'market_price_used' => $marketUsed,
+            'rating'            => $rating,
+            'rating_note'       => $ratingNote,
         ];
     }
 
