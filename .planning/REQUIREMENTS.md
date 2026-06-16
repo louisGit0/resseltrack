@@ -134,7 +134,7 @@ Quelles phases couvrent quels requirements.
 | SUP-01 | Phase 8 | Complete |
 | SUP-02 | Phase 8 | Complete |
 | OPS-06 | Phase 8 | Complete |
-| RATE-01 | Phase 9 | Pending |
+| RATE-01 | Phase 9 | In Progress (storage landed 09-01; behavior in 09-02..04) |
 | IMPORT-01 | Phase 10 | Pending |
 
 **Coverage:**
