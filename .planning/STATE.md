@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Suppliers, ratings & auto-fill
 status: executing
-stopped_at: Completed 10-01-PLAN.md (ProductImportService + Wave-0 test)
-last_updated: "2026-06-16T12:39:59.143Z"
-last_activity: 2026-06-16 -- Phase 10 Plan 01 complete
+stopped_at: Completed 10-02-PLAN.md (fetchUrl + ordered route + form input/preview + app.js initUrlAutofill)
+last_updated: "2026-06-16T12:45:56.754Z"
+last_activity: 2026-06-16 -- Phase 10 Plan 02 complete
 progress:
   total_phases: 3
   completed_phases: 2
   total_plans: 14
-  completed_plans: 12
-  percent: 86
+  completed_plans: 13
+  percent: 93
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-06-12)
 ## Current Position
 
 Phase: 10 (product-url-auto-fill) — EXECUTING
-Plan: 2 of 3
-Status: Plan 10-01 complete (ProductImportService + blocking Wave-0 test, full suite green)
-Last activity: 2026-06-16 -- Phase 10 Plan 01 complete
+Plan: 3 of 3
+Status: Plan 10-02 complete (fetchUrl JSON action + route + form affordance + app.js; full suite green) — 10-03 (deploy + live verify) next
+Last activity: 2026-06-16 -- Phase 10 Plan 02 complete
 
 ## Possible next steps (post-v1.0, optional)
 
@@ -89,6 +89,7 @@ Last activity: 2026-06-16 -- Phase 10 Plan 01 complete
 | Phase 09 P03 | 2m | 2 tasks | 2 files |
 | Phase 09 P04 | 5m | 3 tasks | 3 files |
 | Phase 10-product-url-auto-fill P01 | 10m | 2 tasks | 2 files |
+| Phase 10 P02 | 8m | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -131,6 +132,7 @@ Recent decisions affecting current work:
 - [Phase 08]: 08-04: SUP-01 UI COMPLETE — suppliers/index.php full table (D-09: name/clickable URL/rating stars/comment/orders_count, escaped, confirm-modal delete) + suppliers/form.php (star-widget hidden input name=rating, clearable to unrated D-06). Reusable initStarRating() in app.js keyed on [data-star-rating]+input[type=hidden] (generic for Phase 9 reuse), DOM-guarded, registered on DOMContentLoaded; .star-btn/.supplier-stars CSS; no SUP-02 code touched. SUP-01 marked complete in REQUIREMENTS.md
 - [Phase ?]: [Phase 09]: 09-03: Product form gains a Note du produit section (star widget hidden name=rating reusing initStarRating via [data-star-rating] + Commentaire textarea name=rating_note, distinct from name=description, escaped via e($val('rating_note'))) — no new JS/CSS (D-02 entry point 1). products/index.php shows a read-only .supplier-stars badge next to the product name gated on $p['rating'] !== null; unrated shows nothing, comment not rendered in list (D-04). Views-only plan; RATE-01 stays In Progress (detail quick-rate + route in 09-04, live verify 09-05)
 - [Phase 10]: 10-01: ProductImportService (final, App\Services) ships the phase's headline SSRF guard hand-rolled from fin1te/safecurl — resolveAndValidate(host) resolves A (gethostbynamel) + AAAA (dns_get_record DNS_AAAA), validates EVERY IP via isPublicIp() (FILTER_FLAG_NO_PRIV_RANGE|NO_RES_RANGE + explicit 169.254.169.254 const + ::ffff: IPv4-mapped-IPv6 prefix denial), returns the first validated IP; fetch() pins curl via CURLOPT_RESOLVE host:port:ip, FOLLOWLOCATION off + manual per-hop re-guard (MAX_HOPS 3), CURLOPT_PROTOCOLS+REDIR_PROTOCOLS http/https, TIMEOUT 5/CONNECTTIMEOUT 3, MAXFILESIZE + post-fetch strlen cap. Pure methods: isPublicIp/parse/convert (network-free, unit-tested). parse() = JSON-LD Product first (regex script blocks + json_decode, @graph aware) → og:* meta (DOMXPath, libxml_use_internal_errors) → <title>; empty/garbage → all-null, no throw. convert() reuses ExchangeRateService::latest(); unknown currency OR null rate → raw value + needs_verify=true (no silent mislabel, D-04). og:image via fetchImageDataUri() reuses the SAME guard, ~1.5MB cap, image/* content-type check, base64 data: URI (D-05a, no CSP change). fromUrl() never throws — every failure returns ok:false + French message. Test (tests/ProductImportServiceTest.php, flat, namespace Tests, assertSame only incl. true/false/null, no attributes/providers) = 14 tests/34 assertions green; full suite 41/64 green under failOnWarning. Zero Composer packages. IMPORT-01 marked complete in REQUIREMENTS.md.
+- [Phase 10]: 10-02: IMPORT-01 user-facing flow wired on the 10-01 service. ProductController::fetchUrl() — first json()-using action: Csrf::validate() (form-encoded $_POST['_csrf']) → trim($_POST['url']) → empty→{ok:false,'Aucune URL fournie.'} (json() exits) → (new ProductImportService())->fromUrl($url) → $this->json(); use App\Services\ProductImportService added (Core→Models→Services). Route POST /products/fetch-url registered after store and BEFORE /products/{id} (line 164 < 166) so the {id}→([^/]+) first-match-wins regex does not shadow it (T-10-SH); CSP untouched. form.php: ungated 'Importer depuis une URL produit' col-12 block (input#import-url + button#fetch-url-btn + #import-status + img#import-preview .d-none) at top of row g-3, reuses existing Csrf::field() token, renders on create AND edit. app.js initUrlAutofill() (mirrors 'Taux du jour' fetch): form-encoded URLSearchParams{url,_csrf} POST → fills ONLY empty name + market_price_new (converted_eur ?? price, D-03/D-06 !value.trim() guard) → preview.src = data: URI + remove d-none (D-05) → French manual-entry message on !ok/network error (D-07); .value/.src only never innerHTML (T-10-07); registered in DOMContentLoaded; initStarRating/initQuickRate untouched. php -l + node --check clean; full suite 41/64 green. No deviations. 10-03 = deploy + live verify.
 - [Phase ?]: 09-04: Detail-page interactive quick-rate shipped — POST /products/{id}/rate route (alongside /delete,/images; maps to ProductController::rate from 09-02, no import change). show.php header gains a CSRF-protected quick-rate form: 5 native type=submit star buttons (no-JS graceful fallback) + Effacer + 'noter' affordance when unrated, plus the e()-escaped rating_note shown below the header. app.js initQuickRate() reuses the initStarRating()-painted [data-star-submit] widget (click .star-btn → set hidden rating + form.submit; [data-star-clear-submit] → clear + submit); initStarRating() untouched, no second engine (D-02/D-03/D-05/D-06). RATE-01 stays In Progress — live operator verify is Plan 09-05.
 
 ### Pending Todos
@@ -158,6 +160,6 @@ Items acknowledged and carried forward from research:
 
 ## Session Continuity
 
-Last session: 2026-06-16T12:08:26.079Z
+Last session: 2026-06-16T12:45:56.748Z
 Stopped at: Phase 10 context gathered
-Resume file: .planning/phases/10-product-url-auto-fill/10-CONTEXT.md
+Resume file: None

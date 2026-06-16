@@ -264,7 +264,7 @@ Plans:
 - [x] 10-01-PLAN.md — ProductImportService (SSRF guard + OG/title parse + currency convert) + its blocking Wave-0 unit test
 **Wave 2** *(blocked on Wave 1)*
 
-- [ ] 10-02-PLAN.md — fetchUrl() JSON action + ordered /products/fetch-url route + form input/button/data:-URI preview + app.js fetch-populate-preview
+- [x] 10-02-PLAN.md — fetchUrl() JSON action + ordered /products/fetch-url route + form input/button/data:-URI preview + app.js fetch-populate-preview
 **Wave 3** *(blocked on Wave 2)*
 
 - [ ] 10-03-PLAN.md — Deploy + live verification (route returns JSON, SSRF rejects internal URLs, best-effort E2E)
@@ -286,4 +286,4 @@ v1.0 phases (1-7) complete. v2.0 executes in numeric order: 8 → 9 → 10
 | 7. Production Verification | 1/1 | Complete | 2026-06-15 |
 | 8. Suppliers and Product Cleanup | 6/6 | Complete   | 2026-06-15 |
 | 9. Product Ratings | 5/5 | Complete   | 2026-06-16 |
-| 10. Product URL Auto-fill | 1/3 | In Progress|  |
+| 10. Product URL Auto-fill | 2/3 | In Progress|  |
