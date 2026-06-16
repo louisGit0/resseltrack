@@ -23,7 +23,7 @@ created: 2026-06-16
 **Design constraint (load-bearing):** `ProductImportService` MUST expose **pure, network-free methods** so they are unit-testable — e.g. `isPublicIp(string $ip): bool`, `parse(string $html): array`, `convert(?float $price, ?string $currency, ?float $rate): array`. The curl/DNS I/O method stays thin and is exercised manually live.
 
 ## Wave 0 Requirements (BLOCKING — must exist before the logic is "done")
-- [ ] `tests/Services/ProductImportServiceTest.php` covering IMPORT-01 pure logic.
+- [ ] `tests/ProductImportServiceTest.php` (FLAT `tests/`, `namespace Tests;` — repo convention, mirrors `tests/ExchangeRateServiceTest.php`) covering IMPORT-01 pure logic.
 - [ ] HTML fixtures (inline strings or `tests/fixtures/`): a well-formed OG page, a JS-shell/empty page, a malformed-HTML page.
 - [ ] Pure methods extracted (`isPublicIp`, `parse`, `convert`) so tests run without network.
 

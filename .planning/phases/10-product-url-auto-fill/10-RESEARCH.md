@@ -418,9 +418,12 @@ function initUrlAutofill() {
 | A3 | Vercel function duration on this project's plan allows a ~5s curl (proven) and an optional ~3s image fetch | Pitfall 6 | If on the 5s Hobby limit and both fetches run, risk of 504; mitigated by tight budgets or `maxDuration`. |
 | A4 | `gethostbynamel` (IPv4) + `dns_get_record(...DNS_AAAA)` (IPv6) is sufficient host resolution for the guard | Code Examples | Edge: CDNs with many rotating IPs; the guard validates all returned and pins the first — acceptable for best-effort. |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Image preview vs. CSP (D-05 reconciliation) — needs a planning decision.**
+> **RESOLVED Q1** → locked as **D-05a** in 10-CONTEXT.md: server fetches `og:image` through the same SSRF guard, size-caps it, returns a base64 `data:` URI (no CSP change). Implemented in plan 10-01.
+> **RESOLVED Q2** → locked best-effort contract (D-01): AliExpress blocked/JS-only is the expected case; phase success is NOT gated on AliExpress price/image extraction. Honored in plans 10-01 and 10-03.
+
+1. **Image preview vs. CSP (D-05 reconciliation) — RESOLVED via D-05a.**
    - What we know: D-05 says "show a preview thumbnail" AND "no CSP change". Current CSP `img-src 'self' data: https://res.cloudinary.com` blocks any external CDN image URL.
    - What's unclear: how to render a preview without violating CSP.
    - **Recommendation:** Server fetches the `og:image` **through the same SSRF guard**, size-caps it, base64-encodes it, returns a `data:` URI in `image_url`; JS sets `img.src` to it (allowed by the `data:` token). This satisfies all of D-05 (preview shown, no CSP change, external URL never persisted). Alternative if rejected: show the URL as a plain text link (no `<img>`). Confirm with the user/planner.
