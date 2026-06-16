@@ -25,7 +25,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 8: Suppliers and Product Cleanup** - CRUD fournisseurs, lien optionnel sur les commandes, purge Cloudinary à la suppression produit ⚠ nécessite re-run `bin/migrate.php` (completed 2026-06-15)
 - [x] **Phase 9: Product Ratings** - Note 1-5 + commentaire par produit, éditable après réception, affichée en liste et fiche ⚠ nécessite re-run `bin/migrate.php` (avant déploiement — additif/zéro-downtime)
  (completed 2026-06-16)
-- [ ] **Phase 10: Product URL Auto-fill** - Scrape best-effort d'une URL produit publique (AliExpress) pour pré-remplir titre/prix/image, repli manuel
+- [x] **Phase 10: Product URL Auto-fill** - Scrape best-effort d'une URL produit publique (AliExpress) pour pré-remplir titre/prix/image, repli manuel (completed 2026-06-16)
 
 ## Phase Details
 
@@ -267,7 +267,7 @@ Plans:
 - [x] 10-02-PLAN.md — fetchUrl() JSON action + ordered /products/fetch-url route + form input/button/data:-URI preview + app.js fetch-populate-preview
 **Wave 3** *(blocked on Wave 2)*
 
-- [ ] 10-03-PLAN.md — Deploy + live verification (route returns JSON, SSRF rejects internal URLs, best-effort E2E)
+- [x] 10-03-PLAN.md — Deploy + live verification (route returns JSON, SSRF rejects internal URLs, best-effort E2E)
 **UI hint**: yes
 
 ## Progress
@@ -286,4 +286,4 @@ v1.0 phases (1-7) complete. v2.0 executes in numeric order: 8 → 9 → 10
 | 7. Production Verification | 1/1 | Complete | 2026-06-15 |
 | 8. Suppliers and Product Cleanup | 6/6 | Complete   | 2026-06-15 |
 | 9. Product Ratings | 5/5 | Complete   | 2026-06-16 |
-| 10. Product URL Auto-fill | 2/3 | In Progress|  |
+| 10. Product URL Auto-fill | 3/3 | Complete   | 2026-06-16 |
