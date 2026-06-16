@@ -622,6 +622,33 @@
         });
     }
 
+    // ---------------------------------------------------------------
+    // Quick-rate fiche produit : réutilise le widget déjà rendu par
+    // initStarRating() (data-star-rating) et ajoute uniquement la
+    // soumission automatique pour la variante [data-star-submit].
+    // Pas de second moteur de notation — on ne touche pas initStarRating().
+    // ---------------------------------------------------------------
+    function initQuickRate() {
+        document.querySelectorAll('[data-star-submit]').forEach(function (widget) {
+            const form = widget.closest('form');
+            const input = widget.querySelector('input[type="hidden"]');
+            if (!form || !input) return; // garde : container mal formé
+            widget.querySelectorAll('.star-btn').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    input.value = btn.getAttribute('data-value') || '';
+                    form.submit();
+                });
+            });
+            const clear = widget.querySelector('[data-star-clear-submit]');
+            if (clear) {
+                clear.addEventListener('click', function () {
+                    input.value = ''; // note nulle → le serveur efface
+                    form.submit();
+                });
+            }
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         initPurchaseForm();
         initSaleForm();
@@ -630,6 +657,7 @@
         initCategoryChart();
         initConfirmModal();
         initStarRating();
+        initQuickRate();
         initToasts();
         initCountUp();
         initPhotoGallery();
