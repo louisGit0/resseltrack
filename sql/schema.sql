@@ -34,6 +34,8 @@ CREATE TABLE IF NOT EXISTS products (
   image_path  VARCHAR(255) NULL,
   market_price_new  DECIMAL(10,2) NULL,  -- prix constaté neuf
   market_price_used DECIMAL(10,2) NULL,  -- prix constaté plateformes de revente
+  rating      TINYINT UNSIGNED NULL,     -- note produit 1-5 (RATE-01, NULL = non noté)
+  rating_note TEXT NULL,                 -- commentaire libre sur le produit
   created_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
