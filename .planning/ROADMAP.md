@@ -23,7 +23,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 6: Performance and Reliability** - Fix the N+1 in `SaleController::productsMeta()` and harden `ExchangeRateService` with timeout and visible error (completed 2026-06-15)
 - [x] **Phase 7: Production Verification** - End-to-end verification of every existing feature on the live Vercel URL ✅ VERIF-01 PASS (milestone v1.0 complete)
 - [x] **Phase 8: Suppliers and Product Cleanup** - CRUD fournisseurs, lien optionnel sur les commandes, purge Cloudinary à la suppression produit ⚠ nécessite re-run `bin/migrate.php` (completed 2026-06-15)
-- [x] **Phase 9: Product Ratings** - Note 1-5 + commentaire par produit, éditable après réception, affichée en liste et fiche ⚠ nécessite re-run `bin/migrate.php` (avant déploiement — additif/zéro-downtime) (completed 2026-06-16)
+- [x] **Phase 9: Product Ratings** - Note 1-5 + commentaire par produit, éditable après réception, affichée en liste et fiche ⚠ nécessite re-run `bin/migrate.php` (avant déploiement — additif/zéro-downtime)
+ (completed 2026-06-16)
 - [ ] **Phase 10: Product URL Auto-fill** - Scrape best-effort d'une URL produit publique (AliExpress) pour pré-remplir titre/prix/image, repli manuel
 
 ## Phase Details
@@ -256,7 +257,17 @@ Plans:
 
 **New files**: `src/Services/ProductImportService.php` (curl + HTML parsing; site-by-site; AliExpress first), new route and action (e.g. `POST /products/fetch-url` → `ProductController::fetchUrl()` returning JSON)
 **Modified files**: `src/Controllers/ProductController.php` (add `fetchUrl()` action returning JSON meta), `src/Views/products/form.php` (URL input + minimal JS to call the endpoint and populate fields), `public/index.php` (register the fetch-url route before parameterised product routes)
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+**Wave 1**
+
+- [ ] 10-01-PLAN.md — ProductImportService (SSRF guard + OG/title parse + currency convert) + its blocking Wave-0 unit test
+**Wave 2** *(blocked on Wave 1)*
+
+- [ ] 10-02-PLAN.md — fetchUrl() JSON action + ordered /products/fetch-url route + form input/button/data:-URI preview + app.js fetch-populate-preview
+**Wave 3** *(blocked on Wave 2)*
+
+- [ ] 10-03-PLAN.md — Deploy + live verification (route returns JSON, SSRF rejects internal URLs, best-effort E2E)
 **UI hint**: yes
 
 ## Progress
@@ -275,4 +286,4 @@ v1.0 phases (1-7) complete. v2.0 executes in numeric order: 8 → 9 → 10
 | 7. Production Verification | 1/1 | Complete | 2026-06-15 |
 | 8. Suppliers and Product Cleanup | 6/6 | Complete   | 2026-06-15 |
 | 9. Product Ratings | 5/5 | Complete   | 2026-06-16 |
-| 10. Product URL Auto-fill | 0/TBD | Not started | - |
+| 10. Product URL Auto-fill | 0/3 | Not started | - |
