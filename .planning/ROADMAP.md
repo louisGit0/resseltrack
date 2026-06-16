@@ -230,7 +230,7 @@ Plans:
 **Wave 1** *(parallel — no file overlap)*
 
 - [x] 09-01-PLAN.md — Add products.rating + products.rating_note (schema.sql + Schema::ensure() guarded ALTER, idempotent, ;-free comments)
-- [ ] 09-02-PLAN.md — Product model (rating in create/both update branches + new setRating) + ProductController (validate 1-5/NULL + rate() action, CSRF + ownership)
+- [x] 09-02-PLAN.md — Product model (rating in create/both update branches + new setRating) + ProductController (validate 1-5/NULL + rate() action, CSRF + ownership)
 
 **Wave 2** *(parallel — blocked on Wave 1)*
 
@@ -274,5 +274,5 @@ v1.0 phases (1-7) complete. v2.0 executes in numeric order: 8 → 9 → 10
 | 6. Performance and Reliability | 1/1 | Complete   | 2026-06-15 |
 | 7. Production Verification | 1/1 | Complete | 2026-06-15 |
 | 8. Suppliers and Product Cleanup | 6/6 | Complete   | 2026-06-15 |
-| 9. Product Ratings | 1/5 | In Progress|  |
+| 9. Product Ratings | 2/5 | In Progress|  |
 | 10. Product URL Auto-fill | 0/TBD | Not started | - |
