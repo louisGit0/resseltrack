@@ -88,6 +88,26 @@ $val = static fn(string $k, $def = '') => $old[$k] ?? ($product[$k] ?? $def);
                             <?php endif; ?>
                         </div>
                     </div>
+
+                    <div class="form-section-title mt-4">Note du produit</div>
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label d-block">Note</label>
+                            <div class="star-rating" data-star-rating>
+                                <input type="hidden" name="rating" value="<?= e($val('rating')) ?>">
+                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                    <button type="button" class="star-btn" data-value="<?= $i ?>" aria-label="<?= $i ?> étoile<?= $i > 1 ? 's' : '' ?>"><i class="bi bi-star"></i></button>
+                                <?php endfor; ?>
+                                <button type="button" class="star-clear btn btn-sm btn-link text-muted px-1" data-star-clear>Effacer</button>
+                            </div>
+                            <?php if (isset($errors['rating'])): ?><div class="text-danger" style="font-size:.8rem"><?= e($errors['rating']) ?></div><?php endif; ?>
+                            <div class="form-text">Optionnel — cliquez sur une étoile pour noter de 1 à 5, « Effacer » pour retirer la note.</div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Commentaire</label>
+                            <textarea name="rating_note" class="form-control" rows="3" placeholder="Qualité, conformité, ressenti…"><?= e($val('rating_note')) ?></textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
 
