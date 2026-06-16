@@ -67,7 +67,7 @@ Fonctionnalités produit ajoutées dans le jalon v2.0. Chacune sera mappée à u
 
 ### Auto-remplissage
 
-- [ ] **IMPORT-01**: Coller une **URL de produit public** sur le formulaire tente un **scrape serveur best-effort** (curl + parsing HTML) pour pré-remplir titre + prix + image, avec **repli manuel** si le site bloque ; implémenté **site par site** (cible initiale : pages produit AliExpress). Le scraping de pages de **commande privées** (authentifiées) est explicitement **hors périmètre**.
+- [x] **IMPORT-01**: Coller une **URL de produit public** sur le formulaire tente un **scrape serveur best-effort** (curl + parsing HTML) pour pré-remplir titre + prix + image, avec **repli manuel** si le site bloque ; implémenté **site par site** (cible initiale : pages produit AliExpress). Le scraping de pages de **commande privées** (authentifiées) est explicitement **hors périmètre**.
 
 ### Nettoyage (dette v1.0)
 
@@ -135,7 +135,7 @@ Quelles phases couvrent quels requirements.
 | SUP-02 | Phase 8 | Complete |
 | OPS-06 | Phase 8 | Complete |
 | RATE-01 | Phase 9 | Complete |
-| IMPORT-01 | Phase 10 | Pending |
+| IMPORT-01 | Phase 10 | Complete |
 
 **Coverage:**
 - v1 requirements: 22 total — all Done (milestone v1.0 shipped)

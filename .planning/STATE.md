@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Suppliers, ratings & auto-fill
 status: executing
-stopped_at: Phase 10 context gathered
-last_updated: "2026-06-16T12:33:33.382Z"
-last_activity: 2026-06-16 -- Phase 10 planning complete
+stopped_at: Completed 10-01-PLAN.md (ProductImportService + Wave-0 test)
+last_updated: "2026-06-16T12:39:59.143Z"
+last_activity: 2026-06-16 -- Phase 10 Plan 01 complete
 progress:
   total_phases: 3
   completed_phases: 2
   total_plans: 14
-  completed_plans: 11
-  percent: 67
+  completed_plans: 12
+  percent: 86
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-12)
 
 **Core value:** Tout ce qui fonctionne en local fonctionne à l'identique une fois déployé sur Vercel — le site en ligne est pleinement opérationnel pour de vrais utilisateurs.
-**Current focus:** Phase 09 — product-ratings
+**Current focus:** Phase 10 — product-url-auto-fill
 
 ## Current Position
 
-Phase: 09 (product-ratings) — EXECUTING
-Plan: 4 of 5
-Status: Ready to execute
-Last activity: 2026-06-16 -- Phase 10 planning complete
+Phase: 10 (product-url-auto-fill) — EXECUTING
+Plan: 2 of 3
+Status: Plan 10-01 complete (ProductImportService + blocking Wave-0 test, full suite green)
+Last activity: 2026-06-16 -- Phase 10 Plan 01 complete
 
 ## Possible next steps (post-v1.0, optional)
 
@@ -88,6 +88,7 @@ Last activity: 2026-06-16 -- Phase 10 planning complete
 | Phase 09-product-ratings P01 | 3m | 2 tasks | 2 files |
 | Phase 09 P03 | 2m | 2 tasks | 2 files |
 | Phase 09 P04 | 5m | 3 tasks | 3 files |
+| Phase 10-product-url-auto-fill P01 | 10m | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -129,6 +130,7 @@ Recent decisions affecting current work:
 - [Phase 09]: 09-01: products.rating (TINYINT UNSIGNED NULL) + rating_note (TEXT NULL) added additively to BOTH sql/schema.sql products block (fresh installs) and Schema::ensure() via a SHOW COLUMNS FROM products LIKE 'rating'-guarded ALTER (mirrors orders.supplier_id idempotency). No FK/index; types mirror suppliers.rating/comment. New schema.sql comments kept ';'-free (08-06 splitter deviation). RATE-01 NOT marked complete — storage-only; behavior lands in 09-02..04 (same convention as SUP-01 in Phase 8)
 - [Phase 08]: 08-04: SUP-01 UI COMPLETE — suppliers/index.php full table (D-09: name/clickable URL/rating stars/comment/orders_count, escaped, confirm-modal delete) + suppliers/form.php (star-widget hidden input name=rating, clearable to unrated D-06). Reusable initStarRating() in app.js keyed on [data-star-rating]+input[type=hidden] (generic for Phase 9 reuse), DOM-guarded, registered on DOMContentLoaded; .star-btn/.supplier-stars CSS; no SUP-02 code touched. SUP-01 marked complete in REQUIREMENTS.md
 - [Phase ?]: [Phase 09]: 09-03: Product form gains a Note du produit section (star widget hidden name=rating reusing initStarRating via [data-star-rating] + Commentaire textarea name=rating_note, distinct from name=description, escaped via e($val('rating_note'))) — no new JS/CSS (D-02 entry point 1). products/index.php shows a read-only .supplier-stars badge next to the product name gated on $p['rating'] !== null; unrated shows nothing, comment not rendered in list (D-04). Views-only plan; RATE-01 stays In Progress (detail quick-rate + route in 09-04, live verify 09-05)
+- [Phase 10]: 10-01: ProductImportService (final, App\Services) ships the phase's headline SSRF guard hand-rolled from fin1te/safecurl — resolveAndValidate(host) resolves A (gethostbynamel) + AAAA (dns_get_record DNS_AAAA), validates EVERY IP via isPublicIp() (FILTER_FLAG_NO_PRIV_RANGE|NO_RES_RANGE + explicit 169.254.169.254 const + ::ffff: IPv4-mapped-IPv6 prefix denial), returns the first validated IP; fetch() pins curl via CURLOPT_RESOLVE host:port:ip, FOLLOWLOCATION off + manual per-hop re-guard (MAX_HOPS 3), CURLOPT_PROTOCOLS+REDIR_PROTOCOLS http/https, TIMEOUT 5/CONNECTTIMEOUT 3, MAXFILESIZE + post-fetch strlen cap. Pure methods: isPublicIp/parse/convert (network-free, unit-tested). parse() = JSON-LD Product first (regex script blocks + json_decode, @graph aware) → og:* meta (DOMXPath, libxml_use_internal_errors) → <title>; empty/garbage → all-null, no throw. convert() reuses ExchangeRateService::latest(); unknown currency OR null rate → raw value + needs_verify=true (no silent mislabel, D-04). og:image via fetchImageDataUri() reuses the SAME guard, ~1.5MB cap, image/* content-type check, base64 data: URI (D-05a, no CSP change). fromUrl() never throws — every failure returns ok:false + French message. Test (tests/ProductImportServiceTest.php, flat, namespace Tests, assertSame only incl. true/false/null, no attributes/providers) = 14 tests/34 assertions green; full suite 41/64 green under failOnWarning. Zero Composer packages. IMPORT-01 marked complete in REQUIREMENTS.md.
 - [Phase ?]: 09-04: Detail-page interactive quick-rate shipped — POST /products/{id}/rate route (alongside /delete,/images; maps to ProductController::rate from 09-02, no import change). show.php header gains a CSRF-protected quick-rate form: 5 native type=submit star buttons (no-JS graceful fallback) + Effacer + 'noter' affordance when unrated, plus the e()-escaped rating_note shown below the header. app.js initQuickRate() reuses the initStarRating()-painted [data-star-submit] widget (click .star-btn → set hidden rating + form.submit; [data-star-clear-submit] → clear + submit); initStarRating() untouched, no second engine (D-02/D-03/D-05/D-06). RATE-01 stays In Progress — live operator verify is Plan 09-05.
 
 ### Pending Todos
