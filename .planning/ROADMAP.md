@@ -23,7 +23,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 6: Performance and Reliability** - Fix the N+1 in `SaleController::productsMeta()` and harden `ExchangeRateService` with timeout and visible error (completed 2026-06-15)
 - [x] **Phase 7: Production Verification** - End-to-end verification of every existing feature on the live Vercel URL ✅ VERIF-01 PASS (milestone v1.0 complete)
 - [x] **Phase 8: Suppliers and Product Cleanup** - CRUD fournisseurs, lien optionnel sur les commandes, purge Cloudinary à la suppression produit ⚠ nécessite re-run `bin/migrate.php` (completed 2026-06-15)
-- [ ] **Phase 9: Product Ratings** - Note 1-5 + commentaire par produit, éditable après réception, affichée en liste et fiche ⚠ nécessite re-run `bin/migrate.php`
+- [ ] **Phase 9: Product Ratings** - Note 1-5 + commentaire par produit, éditable après réception, affichée en liste et fiche ⚠ nécessite re-run `bin/migrate.php` (avant déploiement — additif/zéro-downtime)
 - [ ] **Phase 10: Product URL Auto-fill** - Scrape best-effort d'une URL produit publique (AliExpress) pour pré-remplir titre/prix/image, repli manuel
 
 ## Phase Details
