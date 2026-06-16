@@ -63,7 +63,7 @@ Fonctionnalités produit ajoutées dans le jalon v2.0. Chacune sera mappée à u
 
 ### Notation produit
 
-- [ ] **RATE-01**: Un produit porte une **note (1-5) + un commentaire**, éditables après réception, affichés sur la liste et la fiche produit
+- [x] **RATE-01**: Un produit porte une **note (1-5) + un commentaire**, éditables après réception, affichés sur la liste et la fiche produit
 
 ### Auto-remplissage
 

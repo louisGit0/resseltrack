@@ -23,7 +23,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 6: Performance and Reliability** - Fix the N+1 in `SaleController::productsMeta()` and harden `ExchangeRateService` with timeout and visible error (completed 2026-06-15)
 - [x] **Phase 7: Production Verification** - End-to-end verification of every existing feature on the live Vercel URL ✅ VERIF-01 PASS (milestone v1.0 complete)
 - [x] **Phase 8: Suppliers and Product Cleanup** - CRUD fournisseurs, lien optionnel sur les commandes, purge Cloudinary à la suppression produit ⚠ nécessite re-run `bin/migrate.php` (completed 2026-06-15)
-- [ ] **Phase 9: Product Ratings** - Note 1-5 + commentaire par produit, éditable après réception, affichée en liste et fiche ⚠ nécessite re-run `bin/migrate.php` (avant déploiement — additif/zéro-downtime)
+- [x] **Phase 9: Product Ratings** - Note 1-5 + commentaire par produit, éditable après réception, affichée en liste et fiche ⚠ nécessite re-run `bin/migrate.php` (avant déploiement — additif/zéro-downtime) (completed 2026-06-16)
 - [ ] **Phase 10: Product URL Auto-fill** - Scrape best-effort d'une URL produit publique (AliExpress) pour pré-remplir titre/prix/image, repli manuel
 
 ## Phase Details
@@ -239,7 +239,7 @@ Plans:
 
 **Wave 3** *(operator — blocked on Waves 1-2)*
 
-- [ ] 09-05-PLAN.md — Operator: run php bin/migrate.php against Aiven (additive, before deploy) + live verification of RATE-01 on the Vercel URL
+- [x] 09-05-PLAN.md — Operator: run php bin/migrate.php against Aiven (additive, before deploy) + live verification of RATE-01 on the Vercel URL
 **UI hint**: yes
 
 ### Phase 10: Product URL Auto-fill
@@ -274,5 +274,5 @@ v1.0 phases (1-7) complete. v2.0 executes in numeric order: 8 → 9 → 10
 | 6. Performance and Reliability | 1/1 | Complete   | 2026-06-15 |
 | 7. Production Verification | 1/1 | Complete | 2026-06-15 |
 | 8. Suppliers and Product Cleanup | 6/6 | Complete   | 2026-06-15 |
-| 9. Product Ratings | 4/5 | In Progress|  |
+| 9. Product Ratings | 5/5 | Complete   | 2026-06-16 |
 | 10. Product URL Auto-fill | 0/TBD | Not started | - |
