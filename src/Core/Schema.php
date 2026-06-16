@@ -49,6 +49,17 @@ final class Schema
             );
         }
 
+        // Products: per-product rating (1-5) + free-text note (RATE-01). Additive,
+        // nullable, backward-compatible — existing products keep rating = NULL.
+        $hasRating = $db->query("SHOW COLUMNS FROM products LIKE 'rating'")->fetch();
+        if (!$hasRating) {
+            $db->exec(
+                'ALTER TABLE products
+                    ADD COLUMN rating TINYINT UNSIGNED NULL AFTER market_price_used,
+                    ADD COLUMN rating_note TEXT NULL AFTER rating'
+            );
+        }
+
         // Product photo gallery (the cover stays products.image_path).
         $db->exec(
             'CREATE TABLE IF NOT EXISTS product_images (
