@@ -29,6 +29,18 @@ $pid = (int) $product['id'];
                         <span class="badge-soft badge-success">En stock</span>
                     <?php endif; ?>
                 </div>
+                <?php $rating = $product['rating'] !== null ? (int) $product['rating'] : 0; ?>
+                <form method="post" action="/products/<?= $pid ?>/rate" id="quick-rate-form" class="d-inline-flex align-items-center gap-1 mt-1">
+                    <?= \App\Core\Csrf::field() ?>
+                    <div class="star-rating" data-star-rating data-star-submit>
+                        <input type="hidden" name="rating" value="<?= $rating ?: '' ?>">
+                        <?php for ($i = 1; $i <= 5; $i++): ?>
+                            <button type="submit" class="star-btn" data-value="<?= $i ?>" aria-label="Noter <?= $i ?>/5"><i class="bi <?= $i <= $rating ? 'bi-star-fill' : 'bi-star' ?>"></i></button>
+                        <?php endfor; ?>
+                        <button type="submit" class="star-clear btn btn-sm btn-link text-muted px-1" data-star-clear-submit aria-label="Retirer la note">Effacer</button>
+                    </div>
+                    <?php if ($rating === 0): ?><span class="text-muted" style="font-size:.78rem">noter</span><?php endif; ?>
+                </form>
             </div>
         </div>
         <div class="d-flex flex-wrap gap-2">
@@ -45,6 +57,9 @@ $pid = (int) $product['id'];
     </div>
     <?php if (!empty($product['description'])): ?>
         <p class="page-sub mt-2 mb-0" style="max-width:640px"><?= e($product['description']) ?></p>
+    <?php endif; ?>
+    <?php if (!empty($product['rating_note'])): ?>
+        <p class="page-sub mt-2 mb-0" style="max-width:640px"><i class="bi bi-chat-left-quote me-1 text-muted"></i><?= e($product['rating_note']) ?></p>
     <?php endif; ?>
 </div>
 
