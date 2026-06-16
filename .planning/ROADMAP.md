@@ -234,7 +234,7 @@ Plans:
 
 **Wave 2** *(parallel — blocked on Wave 1)*
 
-- [ ] 09-03-PLAN.md — products/form.php Note section (reused star widget + comment textarea) + products/index.php rating badge near the name (D-02/D-04)
+- [x] 09-03-PLAN.md — products/form.php Note section (reused star widget + comment textarea) + products/index.php rating badge near the name (D-02/D-04)
 - [ ] 09-04-PLAN.md — products/show.php interactive quick-rate + comment, POST /products/{id}/rate route, app.js initQuickRate() submit-on-click (D-03/D-05)
 
 **Wave 3** *(operator — blocked on Waves 1-2)*
@@ -274,5 +274,5 @@ v1.0 phases (1-7) complete. v2.0 executes in numeric order: 8 → 9 → 10
 | 6. Performance and Reliability | 1/1 | Complete   | 2026-06-15 |
 | 7. Production Verification | 1/1 | Complete | 2026-06-15 |
 | 8. Suppliers and Product Cleanup | 6/6 | Complete   | 2026-06-15 |
-| 9. Product Ratings | 2/5 | In Progress|  |
+| 9. Product Ratings | 3/5 | In Progress|  |
 | 10. Product URL Auto-fill | 0/TBD | Not started | - |
