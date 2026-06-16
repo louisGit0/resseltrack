@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Suppliers, ratings & auto-fill
 status: executing
-stopped_at: Completed 09-03-PLAN.md
-last_updated: "2026-06-16T09:11:48.124Z"
+stopped_at: Completed 09-04-PLAN.md
+last_updated: "2026-06-16T09:19:28.312Z"
 last_activity: 2026-06-16
 progress:
   total_phases: 3
   completed_phases: 1
   total_plans: 11
-  completed_plans: 9
+  completed_plans: 10
   percent: 33
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-06-12)
 ## Current Position
 
 Phase: 09 (product-ratings) — EXECUTING
-Plan: 3 of 5
+Plan: 4 of 5
 Status: Ready to execute
 Last activity: 2026-06-16
 
@@ -87,6 +87,7 @@ Last activity: 2026-06-16
 | Phase 08 P05 | 6m | 2 tasks | 4 files |
 | Phase 09-product-ratings P01 | 3m | 2 tasks | 2 files |
 | Phase 09 P03 | 2m | 2 tasks | 2 files |
+| Phase 09 P04 | 5m | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -128,6 +129,7 @@ Recent decisions affecting current work:
 - [Phase 09]: 09-01: products.rating (TINYINT UNSIGNED NULL) + rating_note (TEXT NULL) added additively to BOTH sql/schema.sql products block (fresh installs) and Schema::ensure() via a SHOW COLUMNS FROM products LIKE 'rating'-guarded ALTER (mirrors orders.supplier_id idempotency). No FK/index; types mirror suppliers.rating/comment. New schema.sql comments kept ';'-free (08-06 splitter deviation). RATE-01 NOT marked complete — storage-only; behavior lands in 09-02..04 (same convention as SUP-01 in Phase 8)
 - [Phase 08]: 08-04: SUP-01 UI COMPLETE — suppliers/index.php full table (D-09: name/clickable URL/rating stars/comment/orders_count, escaped, confirm-modal delete) + suppliers/form.php (star-widget hidden input name=rating, clearable to unrated D-06). Reusable initStarRating() in app.js keyed on [data-star-rating]+input[type=hidden] (generic for Phase 9 reuse), DOM-guarded, registered on DOMContentLoaded; .star-btn/.supplier-stars CSS; no SUP-02 code touched. SUP-01 marked complete in REQUIREMENTS.md
 - [Phase ?]: [Phase 09]: 09-03: Product form gains a Note du produit section (star widget hidden name=rating reusing initStarRating via [data-star-rating] + Commentaire textarea name=rating_note, distinct from name=description, escaped via e($val('rating_note'))) — no new JS/CSS (D-02 entry point 1). products/index.php shows a read-only .supplier-stars badge next to the product name gated on $p['rating'] !== null; unrated shows nothing, comment not rendered in list (D-04). Views-only plan; RATE-01 stays In Progress (detail quick-rate + route in 09-04, live verify 09-05)
+- [Phase ?]: 09-04: Detail-page interactive quick-rate shipped — POST /products/{id}/rate route (alongside /delete,/images; maps to ProductController::rate from 09-02, no import change). show.php header gains a CSRF-protected quick-rate form: 5 native type=submit star buttons (no-JS graceful fallback) + Effacer + 'noter' affordance when unrated, plus the e()-escaped rating_note shown below the header. app.js initQuickRate() reuses the initStarRating()-painted [data-star-submit] widget (click .star-btn → set hidden rating + form.submit; [data-star-clear-submit] → clear + submit); initStarRating() untouched, no second engine (D-02/D-03/D-05/D-06). RATE-01 stays In Progress — live operator verify is Plan 09-05.
 
 ### Pending Todos
 
@@ -154,6 +156,6 @@ Items acknowledged and carried forward from research:
 
 ## Session Continuity
 
-Last session: 2026-06-16T09:11:48.118Z
-Stopped at: Completed 09-03-PLAN.md
+Last session: 2026-06-16T09:16:17.717Z
+Stopped at: Completed 09-04-PLAN.md
 Resume file: None
