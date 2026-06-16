@@ -113,6 +113,19 @@ final class Product
         $stmt->execute(['path' => $path, 'id' => $id, 'uid' => $userId]);
     }
 
+    /**
+     * Set (or clear with null) the product rating shown in lists & detail.
+     * Rating-only setter for the quick inline rate (D-03) — never touches
+     * rating_note (the comment is edited through the full form, D-02).
+     */
+    public function setRating(int $id, int $userId, ?int $rating): void
+    {
+        $stmt = $this->db->prepare(
+            'UPDATE products SET rating = :rating WHERE id = :id AND user_id = :uid'
+        );
+        $stmt->execute(['rating' => $rating, 'id' => $id, 'uid' => $userId]);
+    }
+
     /** Fill the category only when the product doesn't have one yet. */
     public function setCategoryIfEmpty(int $id, int $userId, string $category): void
     {
@@ -140,8 +153,8 @@ final class Product
     {
         $stmt = $this->db->prepare(
             'INSERT INTO products
-                (user_id, name, category, description, image_path, market_price_new, market_price_used)
-             VALUES (:uid, :name, :category, :description, :image_path, :mnew, :mused)'
+                (user_id, name, category, description, image_path, market_price_new, market_price_used, rating, rating_note)
+             VALUES (:uid, :name, :category, :description, :image_path, :mnew, :mused, :rating, :rating_note)'
         );
         $stmt->execute([
             'uid'         => $userId,
@@ -151,6 +164,8 @@ final class Product
             'image_path'  => $data['image_path'] ?: null,
             'mnew'        => $data['market_price_new'] ?? null,
             'mused'       => $data['market_price_used'] ?? null,
+            'rating'      => $data['rating'] ?? null,        // already int|null from validate()
+            'rating_note' => $data['rating_note'] ?: null,   // empty string → null
         ]);
         return (int) $this->db->lastInsertId();
     }
@@ -163,6 +178,8 @@ final class Product
             'description' => $data['description'] ?: null,
             'mnew'        => $data['market_price_new'] ?? null,
             'mused'       => $data['market_price_used'] ?? null,
+            'rating'      => $data['rating'] ?? null,
+            'rating_note' => $data['rating_note'] ?: null,
             'id'          => $id,
             'uid'         => $userId,
         ];
@@ -172,7 +189,8 @@ final class Product
             $stmt = $this->db->prepare(
                 'UPDATE products SET name = :name, category = :category,
                     description = :description, image_path = :image_path,
-                    market_price_new = :mnew, market_price_used = :mused
+                    market_price_new = :mnew, market_price_used = :mused,
+                    rating = :rating, rating_note = :rating_note
                  WHERE id = :id AND user_id = :uid'
             );
             $params['image_path'] = $data['image_path'];
@@ -182,7 +200,8 @@ final class Product
 
         $stmt = $this->db->prepare(
             'UPDATE products SET name = :name, category = :category, description = :description,
-                market_price_new = :mnew, market_price_used = :mused
+                market_price_new = :mnew, market_price_used = :mused,
+                rating = :rating, rating_note = :rating_note
              WHERE id = :id AND user_id = :uid'
         );
         $stmt->execute($params);
