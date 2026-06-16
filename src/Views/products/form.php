@@ -19,6 +19,15 @@ $val = static fn(string $k, $def = '') => $old[$k] ?? ($product[$k] ?? $def);
             <div class="card mb-3">
                 <div class="card-body p-4">
                     <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label">Importer depuis une URL produit</label>
+                            <div class="input-group">
+                                <input type="url" id="import-url" class="form-control" placeholder="https://… (page produit publique)" autocomplete="off">
+                                <button type="button" id="fetch-url-btn" class="btn btn-outline-secondary">Remplir depuis URL</button>
+                            </div>
+                            <div id="import-status" class="form-text">Best-effort : ne remplit que les champs vides ; complétez à la main si le site bloque.</div>
+                            <img id="import-preview" class="product-thumb mt-2 d-none" alt="Aperçu">
+                        </div>
                         <div class="col-md-7">
                             <label class="form-label">Nom *</label>
                             <input type="text" name="name" class="form-control <?= isset($errors['name']) ? 'is-invalid' : '' ?>"

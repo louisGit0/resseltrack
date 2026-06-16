@@ -628,6 +628,54 @@
     // soumission automatique pour la variante [data-star-submit].
     // Pas de second moteur de notation — on ne touche pas initStarRating().
     // ---------------------------------------------------------------
+    // ---------------------------------------------------------------
+    // Remplir depuis URL : POST form-encodé → fetchUrl() → remplit les
+    // champs VIDES uniquement (D-06), aperçu via data: URI (D-05), repli
+    // FR en cas d'échec (D-07). Calque l'idiome fetch de « Taux du jour ».
+    // ---------------------------------------------------------------
+    function initUrlAutofill() {
+        const btn = document.getElementById('fetch-url-btn');
+        if (!btn) return;
+        const urlIn = document.getElementById('import-url');
+        const csrf = document.querySelector('input[name="_csrf"]')?.value || '';
+        const status = document.getElementById('import-status');
+        const nameIn = document.querySelector('input[name="name"]');
+        const priceIn = document.querySelector('input[name="market_price_new"]');
+        const preview = document.getElementById('import-preview');
+        const FAIL = 'Remplissage automatique indisponible — veuillez saisir manuellement.';
+
+        btn.addEventListener('click', async function () {
+            const url = (urlIn && urlIn.value ? urlIn.value : '').trim();
+            if (!url) return;
+            btn.disabled = true;
+            if (status) status.textContent = 'Récupération…';
+            try {
+                // Form-encodé OBLIGATOIRE : Csrf::validate() lit $_POST['_csrf']
+                // (un corps JSON laisserait $_POST vide → 419).
+                const res = await fetch('/products/fetch-url', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ url: url, _csrf: csrf })
+                });
+                const d = await res.json();
+                if (!d || !d.ok) {
+                    if (status) status.textContent = (d && d.message) || FAIL;
+                } else {
+                    // .value / .src uniquement — jamais innerHTML (XSS, T-10-07).
+                    if (d.name && nameIn && !nameIn.value.trim()) nameIn.value = d.name; // fill-empty (D-06)
+                    const val = d.converted_eur != null ? d.converted_eur : d.price;     // converted_eur ?? price (D-03)
+                    if (val != null && priceIn && !priceIn.value.trim()) priceIn.value = val;
+                    if (d.image_url && preview) { preview.src = d.image_url; preview.classList.remove('d-none'); } // data: URI (D-05)
+                    if (status) status.textContent = d.message || 'Champs pré-remplis — vérifiez avant d’enregistrer.';
+                }
+            } catch (e) {
+                if (status) status.textContent = 'Erreur réseau — veuillez saisir manuellement.';
+            } finally {
+                btn.disabled = false;
+            }
+        });
+    }
+
     function initQuickRate() {
         document.querySelectorAll('[data-star-submit]').forEach(function (widget) {
             const form = widget.closest('form');
@@ -658,6 +706,7 @@
         initConfirmModal();
         initStarRating();
         initQuickRate();
+        initUrlAutofill();
         initToasts();
         initCountUp();
         initPhotoGallery();
