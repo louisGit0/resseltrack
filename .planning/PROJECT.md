@@ -4,21 +4,19 @@
 
 ResellTrack est une plateforme multi-utilisateurs de **suivi d'achat-revente avec calcul de rentabilité** : achat en lots (souvent AliExpress, en USD avec port et douane) revendus à l'unité (Vinted & co). PHP 8.3 + MySQL 8, architecture MVC maison sans framework, conteneurisée avec Docker.
 
-L'application est désormais **déployée et pleinement fonctionnelle sur Vercel** (milestone v1.0 livré : Aiven MySQL/TLS, sessions persistantes, images Cloudinary, sécurité de prod, vérification end-to-end). Le jalon courant (v2.0) ajoute des fonctionnalités produit.
+L'application est **déployée et pleinement fonctionnelle sur Vercel**. Deux jalons sont livrés et vérifiés en production : **v1.0** (Aiven MySQL/TLS, sessions persistantes, images Cloudinary, sécurité de prod) et **v2.0** (fournisseurs notés + lien commandes, notation produit, auto-remplissage URL best-effort, purge Cloudinary).
 
 ## Core Value
 
 Tout ce qui fonctionne en local doit fonctionner **à l'identique une fois déployé sur Vercel** — le site en ligne est pleinement opérationnel pour de vrais utilisateurs (connexion qui persiste, images qui s'affichent, données qui se sauvegardent).
 
-## Current Milestone: v2.0 — Fournisseurs, notation produit & auto-remplissage
+## Current State
 
-**Goal:** Enrichir le suivi achat-revente : gérer ses fournisseurs (notés), noter les produits reçus, et accélérer la saisie via l'import d'une page produit publique.
+**Shipped:** v2.0 (2026-06-16) — 3 phases, 14 plans, all verified live on https://resseltrack-nu.vercel.app. Previous: v1.0 (2026-06-15).
 
-**Target features:**
-- **Fournisseurs** : onglet dédié + CRUD (nom, URL, note 1-5, commentaire) ; lien optionnel depuis les commandes (champ `supplier` libre → menu déroulant).
-- **Notation produit** : note (1-5) + commentaire, éditable après réception, affichée en liste/fiche produit.
-- **Auto-remplissage best-effort** : coller une URL de **produit public** → scrape serveur (curl + parsing) pré-remplit titre/prix/image ; repli manuel ; site par site (cible initiale AliExpress). Scraping de pages de **commande privées** = hors périmètre.
-- **Nettoyage** : la suppression d'un produit purge ses objets Cloudinary (dette de v1.0).
+Archives: [`milestones/v2.0-ROADMAP.md`](milestones/v2.0-ROADMAP.md), [`milestones/v2.0-REQUIREMENTS.md`](milestones/v2.0-REQUIREMENTS.md), [`MILESTONES.md`](MILESTONES.md).
+
+**Next milestone:** not yet defined — run `/gsd:new-milestone` to scope v3.0.
 
 ## Requirements
 
@@ -37,13 +35,19 @@ Tout ce qui fonctionne en local doit fonctionner **à l'identique une fois dépl
 
 ### Active
 
-<!-- Périmètre du jalon v2.0 : fonctionnalités fournisseurs / notation / auto-remplissage. -->
+<!-- Aucun jalon en cours. Définir le prochain via /gsd:new-milestone. -->
 
-- [ ] Onglet **Fournisseurs** : CRUD (nom, URL, note 1-5, commentaire) scopé par utilisateur
-- [ ] Lien optionnel des commandes vers un fournisseur (champ `supplier` libre → menu déroulant, rétrocompatible)
-- [ ] **Notation produit** (note 1-5 + commentaire), éditable après réception, affichée en liste/fiche
-- [ ] **Auto-remplissage best-effort** depuis une URL de produit public (scrape serveur titre/prix/image, repli manuel)
-- [ ] Purge des images Cloudinary à la suppression d'un produit (dette v1.0)
+- (Aucun — jalon v2.0 livré ; périmètre v3.0 à définir)
+
+### Shipped — v2.0 (fonctionnalités produit)
+
+<!-- Livré et vérifié en production le 2026-06-16. -->
+
+- ✓ Onglet **Fournisseurs** : CRUD scopé utilisateur (nom, URL, note 1-5, commentaire) (SUP-01)
+- ✓ Lien optionnel commande → fournisseur (menu déroulant + « Autre », rétrocompatible, `ON DELETE SET NULL`) (SUP-02)
+- ✓ **Notation produit** (note 1-5 + commentaire) : formulaire + quick-rate sur la fiche, badge en liste (RATE-01)
+- ✓ **Auto-remplissage best-effort** depuis une URL produit publique : `ProductImportService` SSRF-gardé, AliExpress + Open Graph, conversion EUR, aperçu data:URI (IMPORT-01)
+- ✓ Purge des images Cloudinary à la suppression d'un produit (OPS-06)
 
 ### Shipped — v1.0 (déploiement Vercel)
 
@@ -91,11 +95,13 @@ Tout ce qui fonctionne en local doit fonctionner **à l'identique une fois dépl
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Déployer sur Vercel malgré un stack PHP/Apache/MySQL peu adapté | Choix explicite de l'utilisateur après présentation des alternatives Docker-natives | — Pending |
+| Déployer sur Vercel malgré un stack PHP/Apache/MySQL peu adapté | Choix explicite de l'utilisateur après présentation des alternatives Docker-natives | ✓ Good — v1.0 + v2.0 livrés et vérifiés en prod |
 | Conserver MySQL via **Aiven for MySQL 8** (pas de Postgres, pas de TiDB) | Code PDO/SQL spécifiques MySQL ; TiDB casse le verrou `FOR UPDATE` des ventes (transactions optimistes) | ✓ Good — confirmé après recherche |
 | Sessions stockées en base MySQL (`SessionHandlerInterface`) | Réutilise l'infra DB existante ; évite d'ajouter un service Redis | ✓ Good — confirmé après recherche |
-| Upload d'images via **Cloudflare R2** (`aws/aws-sdk-php`) | Vercel Blob n'a aucun SDK PHP officiel (API interne fragile) ; R2 est S3-compatible et maintenable | ✓ Good — confirmé après recherche |
-| Nouvelles fonctionnalités reportées à un futur jalon | Priorité : un déploiement fonctionnel d'abord | — Pending |
+| Upload d'images via **Cloudinary** (pivot depuis R2/`aws-sdk-php`) | R2/Supabase exigeaient carte/quota ; Cloudinary gratuit sans carte, REST signé via curl (pas de SDK) | ✓ Good — STORE-01..05 vérifiés live |
+| v2.0 : lien commande↔fournisseur rétrocompatible via dual-write id+nom + `ON DELETE SET NULL` | Zéro migration des commandes existantes ; le texte libre reste affiché si le fournisseur est supprimé | ✓ Good — SUP-02 vérifié live |
+| v2.0 : auto-remplissage = scrape serveur SSRF-gardé, pages **publiques** uniquement (commande privée hors scope) | Pages de commande authentifiées infaisables (session + anti-bot) ; SSRF = risque clé du fetch d'URL utilisateur | ✓ Good — IMPORT-01 vérifié live (SSRF rejette IP internes) |
+| v2.0 : aperçu image scrapée en `data:` URI (pas d'upload, pas de modif CSP) | Évite orphelins Cloudinary + ne pas ouvrir la CSP à des CDN arbitraires | ✓ Good — D-05a |
 
 ## Evolution
 
@@ -115,4 +121,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-06-12 after initialization*
+*Last updated: 2026-06-16 after v2.0 milestone*
