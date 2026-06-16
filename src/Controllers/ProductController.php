@@ -12,6 +12,7 @@ use App\Models\Purchase;
 use App\Models\Sale;
 use App\Services\ProfitCalculator;
 use App\Services\CloudinaryStorage;
+use App\Services\ProductImportService;
 
 final class ProductController extends Controller
 {
@@ -457,6 +458,25 @@ final class ProductController extends Controller
         $this->products->setRating($pid, $userId, $rating); // rating-only (D-02: comment edited via the form)
         $this->flash('success', $rating === null ? 'Note retirée.' : 'Note enregistrée.');
         $this->redirect('/products/' . $pid);
+    }
+
+    /**
+     * Best-effort "Remplir depuis URL" JSON action (D-07, IMPORT-01).
+     *
+     * Thin transport: validate the form-encoded CSRF token, read the posted URL,
+     * delegate the SSRF-guarded fetch/parse/convert to ProductImportService, and
+     * return its typed result via Controller::json(). Auth is already enforced by
+     * the constructor. The router passes $params as an ignored extra arg (like
+     * store()), so this stays parameterless.
+     */
+    public function fetchUrl(): void
+    {
+        Csrf::validate(); // reads form-encoded $_POST['_csrf'] (a JSON body → 419 by design)
+        $url = trim((string) ($_POST['url'] ?? ''));
+        if ($url === '') {
+            $this->json(['ok' => false, 'message' => 'Aucune URL fournie.']); // json() exits — no fallthrough
+        }
+        $this->json((new ProductImportService())->fromUrl($url));
     }
 
     /** @return array<string,mixed>|null */

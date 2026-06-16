@@ -161,6 +161,7 @@ $router->get('/products', [ProductController::class, 'index']);
 $router->get('/products/create', [ProductController::class, 'create']);
 $router->get('/products/{id}', [ProductController::class, 'show']);
 $router->post('/products', [ProductController::class, 'store']);
+$router->post('/products/fetch-url', [ProductController::class, 'fetchUrl']); // static — MUST precede /products/{id} (match order, T-10-SH)
 $router->get('/products/{id}/edit', [ProductController::class, 'edit']);
 $router->post('/products/{id}', [ProductController::class, 'update']);
 $router->post('/products/{id}/delete', [ProductController::class, 'destroy']);
