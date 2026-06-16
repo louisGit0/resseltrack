@@ -224,8 +224,22 @@ Plans:
   3. The product detail page displays the rating and the full note text, editable from the existing edit link
 
 **New files**: none (columns on existing table, views updated in place)
-**Modified files**: `sql/schema.sql` (products.rating + products.rating_note), `src/Models/Product.php` (include new columns in find/update queries), `src/Controllers/ProductController.php` (validate and save rating fields), `src/Views/products/form.php` (rating inputs), `src/Views/products/index.php` (rating badge in list), `src/Views/products/show.php` (rating display)
-**Plans**: TBD
+**Modified files**: `sql/schema.sql` (products.rating + products.rating_note), `src/Core/Schema.php` (guarded ALTER), `src/Models/Product.php` (rating in create/update + new setRating), `src/Controllers/ProductController.php` (validate + rate action), `src/Views/products/form.php` (rating inputs), `src/Views/products/index.php` (rating badge in list), `src/Views/products/show.php` (interactive quick-rate + comment), `public/index.php` (POST /products/{id}/rate), `public/assets/js/app.js` (initQuickRate wrapper)
+**Plans**: 5 plans
+Plans:
+**Wave 1** *(parallel — no file overlap)*
+
+- [ ] 09-01-PLAN.md — Add products.rating + products.rating_note (schema.sql + Schema::ensure() guarded ALTER, idempotent, ;-free comments)
+- [ ] 09-02-PLAN.md — Product model (rating in create/both update branches + new setRating) + ProductController (validate 1-5/NULL + rate() action, CSRF + ownership)
+
+**Wave 2** *(parallel — blocked on Wave 1)*
+
+- [ ] 09-03-PLAN.md — products/form.php Note section (reused star widget + comment textarea) + products/index.php rating badge near the name (D-02/D-04)
+- [ ] 09-04-PLAN.md — products/show.php interactive quick-rate + comment, POST /products/{id}/rate route, app.js initQuickRate() submit-on-click (D-03/D-05)
+
+**Wave 3** *(operator — blocked on Waves 1-2)*
+
+- [ ] 09-05-PLAN.md — Operator: run php bin/migrate.php against Aiven (additive, before deploy) + live verification of RATE-01 on the Vercel URL
 **UI hint**: yes
 
 ### Phase 10: Product URL Auto-fill
@@ -260,5 +274,5 @@ v1.0 phases (1-7) complete. v2.0 executes in numeric order: 8 → 9 → 10
 | 6. Performance and Reliability | 1/1 | Complete   | 2026-06-15 |
 | 7. Production Verification | 1/1 | Complete | 2026-06-15 |
 | 8. Suppliers and Product Cleanup | 6/6 | Complete   | 2026-06-15 |
-| 9. Product Ratings | 0/TBD | Not started | - |
+| 9. Product Ratings | 0/5 | Planned | - |
 | 10. Product URL Auto-fill | 0/TBD | Not started | - |
